@@ -90,10 +90,14 @@
         // Calculate distance from center of screen
         const dx = x - width / 2;
         const dy = y - height / 2;
-        const distFromCenter = Math.sqrt(dx * dx + dy * dy);
 
-        // Only add particle if it's outside the safe zone (300px radius)
-        if (distFromCenter > 300) {
+        // Oval exclusion zone
+        // We want particles ONLY outside the oval
+        const radiusX = 380; // Horizontal radius
+        const radiusY = 220; // Vertical radius
+
+        // Ellipse equation: (x²/a²) + (y²/b²) > 1 means outside
+        if ((dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) > 1) {
           particles.push(new Particle(x, y));
         }
       }
