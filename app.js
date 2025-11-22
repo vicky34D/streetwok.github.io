@@ -23,6 +23,7 @@
       this.originX = x;
       this.originY = y;
       this.color = '#2d2d2d'; // Default dark gray
+      this.currentRadius = radius;
     }
 
     update() {
@@ -31,23 +32,28 @@
       const dy = mouse.y - this.originY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
+      // Squish/Expand Animation (Pulsing)
+      // Organic sine wave based on time and position
+      const time = Date.now() * 0.004;
+      const pulse = Math.sin(time + this.originX * 0.05 + this.originY * 0.05);
+
+      // Base radius varies between 60% and 140% of original size
+      this.currentRadius = radius * (1 + pulse * 0.4);
+
       // Wave effect calculation
-      // If within radius, push down/up based on distance
       if (dist < waveRadius) {
         const angle = Math.atan2(dy, dx);
         const force = (waveRadius - dist) / waveRadius;
 
         // Create a ripple/wave effect
-        // We move Y position based on sine wave of distance
         const wave = Math.sin(dist * 0.05 - Date.now() * 0.005) * waveHeight * force;
-
         this.y = this.originY + wave;
 
-        // Make area clear: Fade out based on proximity
-        // force is 1 at center (mouse), 0 at edge.
-        const alpha = Math.max(0, 1 - force * 1.2);
+        // Expand more when wave hits
+        this.currentRadius += force * 2.5;
 
-        // Use Orange color for the wave, but fade it out
+        // Make area clear & color change
+        const alpha = Math.max(0, 1 - force * 1.2);
         this.color = `rgba(255, 77, 0, ${alpha})`;
 
       } else {
@@ -59,7 +65,8 @@
 
     draw() {
       ctx.beginPath();
-      ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
+      // Ensure radius is positive
+      ctx.arc(this.x, this.y, Math.max(0, this.currentRadius), 0, Math.PI * 2);
       ctx.fillStyle = this.color;
       ctx.fill();
     }
