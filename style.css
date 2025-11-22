@@ -67,6 +67,26 @@ html,
   gap: 24px;
   z-index: 10;
   text-align: center;
+  padding: 40px;
+}
+
+/* Background Image Overlay */
+.center-content::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 250%;
+  height: 250%;
+  background-image: url('bike_bg.png');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  opacity: 0.15;
+  /* Subtle overlay */
+  z-index: -1;
+  pointer-events: none;
 }
 
 /* Logo Area */
