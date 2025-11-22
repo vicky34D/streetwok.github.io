@@ -7,8 +7,8 @@
   let particles = [];
 
   // Configuration
-  const gap = 30; // Distance between dots
-  const radius = 2; // Dot size
+  const gap = 25; // Distance between dots
+  const radius = 1.5; // Dot size
   const waveHeight = 60; // Max height of wave
   const waveRadius = 250; // Radius of mouse influence
 
@@ -42,11 +42,11 @@
 
         this.y = this.originY + wave;
 
-        // Color change based on height/force
-        // Orange/Yellow when active
-        if (force > 0.5) this.color = '#ff4d00';
-        else if (force > 0.2) this.color = '#ffcc00';
-        else this.color = '#2d2d2d';
+        // Make area clear: Fade out based on proximity
+        // force is 1 at center (mouse), 0 at edge.
+        // Opacity should be 0 at center, 1 at edge.
+        const alpha = Math.max(0, 1 - force * 1.5); // Multiply by 1.5 to clear center faster
+        this.color = `rgba(45, 45, 45, ${alpha})`;
 
       } else {
         // Return to original
