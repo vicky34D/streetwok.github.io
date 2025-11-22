@@ -45,9 +45,10 @@
 
         // Make area clear: Fade out based on proximity
         // force is 1 at center (mouse), 0 at edge.
-        // Opacity should be 0 at center, 1 at edge.
-        const alpha = Math.max(0, 1 - force * 1.5); // Multiply by 1.5 to clear center faster
-        this.color = `rgba(45, 45, 45, ${alpha})`;
+        const alpha = Math.max(0, 1 - force * 1.2);
+
+        // Use Orange color for the wave, but fade it out
+        this.color = `rgba(255, 77, 0, ${alpha})`;
 
       } else {
         // Return to original
