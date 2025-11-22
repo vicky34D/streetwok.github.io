@@ -7,8 +7,8 @@
   let particles = [];
 
   // Configuration
-  const gap = 50; // Distance between dots
-  const radius = 1.5; // Dot size
+  const gap = 80; // Distance between lines (increased for fewer lines)
+  const radius = 1.5; // Dot size (not used for lines)
   const waveHeight = 60; // Max height of wave
   const waveRadius = 250; // Radius of mouse influence
 
@@ -23,7 +23,7 @@
       this.originX = x;
       this.originY = y;
       this.color = '#2d2d2d'; // Default dark gray
-      this.baseLength = 3; // Smaller base length
+      this.baseLength = 2; // Very small base length
       this.currentLength = this.baseLength;
 
       // Calculate angle pointing toward center of screen
@@ -38,12 +38,19 @@
       const dy = mouse.y - this.originY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
+      // Jellyfish-like flowing motion
+      const time = Date.now() * 0.002;
+      const flowX = Math.sin(time + this.originY * 0.01) * 3;
+      const flowY = Math.cos(time + this.originX * 0.01) * 3;
+
+      this.x = this.originX + flowX;
+      this.y = this.originY + flowY;
+
       // Squish/Expand Animation (Line Length)
-      const time = Date.now() * 0.004;
-      const pulse = Math.sin(time + this.originX * 0.05 + this.originY * 0.05);
+      const pulse = Math.sin(time * 2 + this.originX * 0.05 + this.originY * 0.05);
 
       // Length varies: "Squish" (short) to "Expand" (long)
-      this.currentLength = this.baseLength * (1 + pulse * 0.5);
+      this.currentLength = this.baseLength * (1 + pulse * 0.6);
 
       // Wave effect calculation
       if (dist < waveRadius) {
@@ -52,18 +59,16 @@
 
         // Create a ripple/wave effect
         const wave = Math.sin(dist * 0.05 - Date.now() * 0.005) * waveHeight * force;
-        this.y = this.originY + wave;
+        this.y += wave;
 
         // Expand significantly when wave hits
-        this.currentLength += force * 15;
+        this.currentLength += force * 12;
 
         // Make area clear & color change
         const alpha = Math.max(0, 1 - force * 1.2);
         this.color = `rgba(255, 77, 0, ${alpha})`;
 
       } else {
-        // Return to original
-        this.y += (this.originY - this.y) * 0.1;
         this.color = '#2d2d2d';
       }
     }
@@ -81,7 +86,7 @@
       ctx.lineTo(this.x + (cos * len), this.y + (sin * len));
 
       ctx.strokeStyle = this.color;
-      ctx.lineWidth = 2; // Thickness of the line
+      ctx.lineWidth = 1; // Thinner lines
       ctx.lineCap = 'round';
       ctx.stroke();
     }
