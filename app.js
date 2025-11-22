@@ -111,7 +111,7 @@
 
     // Automatic movement if not hovering
     if (!isHovering) {
-      const time = Date.now() * 0.001;
+      const time = Date.now() * 0.0003; // Slower speed
       // Figure-8 / Lissajous pattern
       mouse.x = width / 2 + Math.sin(time) * (width / 3);
       mouse.y = height / 2 + Math.cos(time * 1.3) * (height / 3);
