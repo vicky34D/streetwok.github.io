@@ -23,7 +23,9 @@
       this.originX = x;
       this.originY = y;
       this.color = '#2d2d2d'; // Default dark gray
-      this.currentRadius = radius;
+      this.baseLength = 6; // Base length of the line
+      this.currentLength = this.baseLength;
+      this.angle = Math.PI / 4; // 45 degree angle
     }
 
     update() {
@@ -32,13 +34,12 @@
       const dy = mouse.y - this.originY;
       const dist = Math.sqrt(dx * dx + dy * dy);
 
-      // Squish/Expand Animation (Pulsing)
-      // Organic sine wave based on time and position
+      // Squish/Expand Animation (Line Length)
       const time = Date.now() * 0.004;
       const pulse = Math.sin(time + this.originX * 0.05 + this.originY * 0.05);
 
-      // Base radius varies between 60% and 140% of original size
-      this.currentRadius = radius * (1 + pulse * 0.4);
+      // Length varies: "Squish" (short) to "Expand" (long)
+      this.currentLength = this.baseLength * (1 + pulse * 0.5);
 
       // Wave effect calculation
       if (dist < waveRadius) {
@@ -49,8 +50,8 @@
         const wave = Math.sin(dist * 0.05 - Date.now() * 0.005) * waveHeight * force;
         this.y = this.originY + wave;
 
-        // Expand more when wave hits
-        this.currentRadius += force * 2.5;
+        // Expand significantly when wave hits
+        this.currentLength += force * 15;
 
         // Make area clear & color change
         const alpha = Math.max(0, 1 - force * 1.2);
@@ -65,10 +66,20 @@
 
     draw() {
       ctx.beginPath();
-      // Ensure radius is positive
-      ctx.arc(this.x, this.y, Math.max(0, this.currentRadius), 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
+
+      // Calculate line end points based on angle and length
+      const cos = Math.cos(this.angle);
+      const sin = Math.sin(this.angle);
+      const len = Math.max(0, this.currentLength);
+
+      // Draw line centered at x,y
+      ctx.moveTo(this.x - (cos * len), this.y - (sin * len));
+      ctx.lineTo(this.x + (cos * len), this.y + (sin * len));
+
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = 2; // Thickness of the line
+      ctx.lineCap = 'round';
+      ctx.stroke();
     }
   }
 
