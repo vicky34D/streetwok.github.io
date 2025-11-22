@@ -23,9 +23,13 @@
       this.originX = x;
       this.originY = y;
       this.color = '#2d2d2d'; // Default dark gray
-      this.baseLength = 6; // Base length of the line
+      this.baseLength = 3; // Smaller base length
       this.currentLength = this.baseLength;
-      this.angle = Math.PI / 4; // 45 degree angle
+
+      // Calculate angle pointing toward center of screen
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      this.angle = Math.atan2(centerY - y, centerX - x);
     }
 
     update() {
