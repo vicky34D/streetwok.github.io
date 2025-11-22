@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>StreetWok — The Ultimate Bike Café</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Oswald:wght@400;700&family=Sacramento&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <!-- Matter.js CDN (used in-browser) -->
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+</head>
+
+<body>
+  <canvas id="waveCanvas"></canvas>
+
+  <div class="center-content">
+    <div class="logo" id="logo">
+      <div class="letter">S</div>
+      <div class="letter">T</div>
+      <div class="letter">R</div>
+      <div class="letter">E</div>
+      <div class="letter">E</div>
+      <div class="letter">T</div>
+      <div class="letter">W</div>
+      <div class="letter">O</div>
+      <div class="letter">K</div>
+    </div>
+    <div class="subtitle" id="aboutBtn">THE BIKER'S CAFE</div>
+    <button id="menuBtn" class="main-cta">VIEW MENU</button>
+  </div>
+
+  <!-- About Us Overlay -->
+  <div id="aboutOverlay" class="menu-overlay">
+    <div class="menu-container about-container">
+      <button id="closeAbout" class="close-btn">&times;</button>
+      <h2 class="menu-title">OUR STORY</h2>
+
+      <div class="about-grid">
+        <div class="about-section">
+          <h3 class="section-title">OUR MOTO</h3>
+          <p>Our motto is to build a strong and welcoming bikers community — a place where riders can connect, share
+            their journeys, support each other, and feel at home. At StreetWok Bikers Café, every visit is more than
+            just food; it's about creating bonds, celebrating the passion for riding, and growing together as a united
+            biking family.</p>
+        </div>
+
+        <div class="about-section">
+          <h3 class="section-title">ABOUT OUR CAFE</h3>
+          <p>Located in the heart of Mukundapur, StreetWok is more than a pitstop. It's a sanctuary for those who live
+            on two wheels. We serve bold flavors, hot coffee, and the best stories from the road. Whether you ride a
+            superbike or a scooter, you belong here.</p>
+        </div>
+
+        <div class="about-section">
+          <h3 class="section-title">OUR JOURNEY</h3>
+          <p>Started in 2024 with a single wok and a dream, we've grown into the city's favorite hangout spot. From
+            weekend breakfast rides to late-night chai runs, we've been part of thousands of kilometers of memories.</p>
+        </div>
+
+        <div class="about-section">
+          <h3 class="section-title">UPCOMING RIDES</h3>
+          <ul class="ride-list">
+            <li><strong>Sunday Morning Blast:</strong> Kolaghat Breakfast Run (Nov 24th)</li>
+            <li><strong>Night Owl Ride:</strong> City Tour & Chai (Dec 1st)</li>
+            <li><strong>Winter Expedition:</strong> North Bengal Tour (Dec 15th)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="signature-area">
+        <p class="signature">- Sudipa</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Holographic Menu Overlay -->
+  <div id="menuOverlay" class="menu-overlay">
+    <div class="menu-container">
+      <button id="closeMenu" class="close-btn">&times;</button>
+      <h2 class="menu-title">FUEL STATION MENU</h2>
+
+      <div class="menu-grid">
+        <!-- Section 1: Throttle Combo -->
+        <div class="menu-section">
+          <h3 class="section-title">THROTTLE COMBOS</h3>
+          <ul class="menu-list">
+            <li><span>Classic Momo Meal</span><span class="dots"></span><span class="price">₹99</span></li>
+            <li><span>Wings & Fries</span><span class="dots"></span><span class="price">₹99</span></li>
+            <li><span>Fish & Fries</span><span class="dots"></span><span class="price">₹99</span></li>
+            <li><span>Spicy Momo Meal</span><span class="dots"></span><span class="price">₹119</span></li>
+            <li><span>Fried Momo Meal</span><span class="dots"></span><span class="price">₹119</span></li>
+            <li><span>Strips Meal</span><span class="dots"></span><span class="price">₹139</span></li>
+            <li><span>Korean Meal (Hot Strips)</span><span class="dots"></span><span class="price">₹159</span></li>
+            <li><span>Veggie Snack Combo</span><span class="dots"></span><span class="price">₹249</span></li>
+          </ul>
+        </div>
+
+        <!-- Section 2: Momo -->
+        <div class="menu-section">
+          <h3 class="section-title">MOMO (PER PLATE)</h3>
+          <ul class="menu-list">
+            <li><span>Chicken Steam Momo</span><span class="dots"></span><span class="price">₹60</span></li>
+            <li><span>Spicy Chicken Stem Momo</span><span class="dots"></span><span class="price">₹70</span></li>
+            <li><span>Fried Chicken Momo</span><span class="dots"></span><span class="price">₹80</span></li>
+            <li><span>Fried Peri-Peri Momo</span><span class="dots"></span><span class="price">₹80</span></li>
+            <li><span>StreetWok Special Momo</span><span class="dots"></span><span class="price">₹100</span></li>
+            <li><span>Special Fried Momo</span><span class="dots"></span><span class="price">₹120</span></li>
+          </ul>
+        </div>
+
+        <!-- Section 3: Sides & Bites -->
+        <div class="menu-section">
+          <h3 class="section-title">SIDES - FRIES & BITES</h3>
+          <ul class="menu-list">
+            <li><span>French Fries (S/L)</span><span class="dots"></span><span class="price">₹49 / ₹79</span></li>
+            <li><span>Peri Peri Fries (S/L)</span><span class="dots"></span><span class="price">₹59 / ₹89</span></li>
+            <li><span>Chicken Strips (4/6 pcs)</span><span class="dots"></span><span class="price">₹99 / ₹139</span>
+            </li>
+            <li><span>Chicken Popcorn (12/18)</span><span class="dots"></span><span class="price">₹99 / ₹139</span>
+            </li>
+            <li><span>Fried Wings (2/4 pcs)</span><span class="dots"></span><span class="price">₹60 / ₹109</span></li>
+            <li><span>Chicken Cheese Balls</span><span class="dots"></span><span class="price">₹99 / ₹139</span></li>
+            <li><span>Corn Cheese Balls</span><span class="dots"></span><span class="price">₹89 / ₹119</span></li>
+            <li><span>Fish Fingers (2/4 pcs)</span><span class="dots"></span><span class="price">₹60 / ₹109</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="menu-footer">
+        <p>STREETWOK BIKERS CAFE • MUKUNDAPUR • +91 6290591422</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <small>STREETWOK MOTO-CAFE // EST. 2024 // RIDE HARD • EAT WELL</small>
+  </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
