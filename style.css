@@ -236,42 +236,51 @@ html,
 
   /* Mobile Logo Scaling */
   .logo {
-    gap: 4px;
+    gap: 2px;
+    /* Tighter gap */
     flex-wrap: nowrap;
     /* Force single line */
+    max-width: 100%;
+    /* Ensure it doesn't overflow */
+    justify-content: center;
   }
 
   .letter {
-    width: 32px;
-    height: 32px;
-    font-size: 18px;
+    width: 28px;
+    /* Smaller letters to fit 320px screens */
+    height: 28px;
+    font-size: 16px;
     border-width: 1px;
-    box-shadow: 3px 3px 0px var(--primary);
+    box-shadow: 2px 2px 0px var(--primary);
   }
 
   .letter:hover {
-    transform: translateY(-4px) rotate(5deg);
-    box-shadow: 4px 4px 0px var(--accent);
+    transform: translateY(-2px) rotate(5deg);
+    box-shadow: 3px 3px 0px var(--accent);
   }
 
   .subtitle {
-    font-size: 14px;
+    font-size: 12px;
     letter-spacing: 2px;
     padding: 6px 12px;
     white-space: nowrap;
-    /* Prevent subtitle wrapping */
+    width: 100%;
+    max-width: 280px;
+    /* Constrain width */
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .center-content {
     width: 100%;
-    padding: 20px;
+    padding: 10px;
+    /* Reduce padding */
+    gap: 16px;
   }
 
   .center-content::before {
     width: 300%;
-    /* Much larger on mobile */
     height: 100vh;
-    /* Cover full height */
     background-size: contain;
     opacity: 0.1;
     top: 50%;
