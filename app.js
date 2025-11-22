@@ -80,7 +80,22 @@
 
     for (let i = 0; i < cols; i++) {
       for (let j = 0; j < rows; j++) {
-        particles.push(new Particle(startX + i * gap, startY + j * gap));
+        // Randomize position slightly to break the grid lines
+        const randX = (Math.random() - 0.5) * gap * 0.8;
+        const randY = (Math.random() - 0.5) * gap * 0.8;
+
+        const x = startX + i * gap + randX;
+        const y = startY + j * gap + randY;
+
+        // Calculate distance from center of screen
+        const dx = x - width / 2;
+        const dy = y - height / 2;
+        const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+
+        // Only add particle if it's outside the safe zone (300px radius)
+        if (distFromCenter > 300) {
+          particles.push(new Particle(x, y));
+        }
       }
     }
   }
