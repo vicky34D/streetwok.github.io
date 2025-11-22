@@ -131,6 +131,18 @@
     isHovering = true;
     mouse.x = e.clientX;
     mouse.y = e.clientY;
+
+    // Parallax Effect for Background
+    const moveX = (e.clientX - width / 2) * 0.02;
+    const moveY = (e.clientY - height / 2) * 0.02;
+
+    // We target the background overlay by changing the container's perspective or transform
+    // Since the background is a pseudo-element of .center-content, we can't move it directly.
+    // However, we can move the .center-content slightly to give a floating feel.
+    const content = document.querySelector('.center-content');
+    if (content) {
+      content.style.transform = `translate(calc(-50% + ${-moveX}px), calc(-50% + ${-moveY}px))`;
+    }
   });
   window.addEventListener('mouseout', () => {
     isHovering = false;

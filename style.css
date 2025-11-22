@@ -116,6 +116,58 @@ html,
   box-shadow: 6px 6px 0px var(--primary);
   border: 2px solid var(--secondary);
   transition: transform 0.2s;
+  opacity: 0;
+  /* Start hidden for animation */
+  animation: dropIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Staggered Delays */
+.letter:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.letter:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.letter:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.letter:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.letter:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.letter:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+.letter:nth-child(7) {
+  animation-delay: 0.7s;
+}
+
+.letter:nth-child(8) {
+  animation-delay: 0.8s;
+}
+
+.letter:nth-child(9) {
+  animation-delay: 0.9s;
+}
+
+@keyframes dropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) rotate(-10deg);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotate(0deg);
+  }
 }
 
 .letter:nth-child(odd) {
@@ -140,6 +192,15 @@ html,
   transform: rotate(-2deg);
   cursor: pointer;
   transition: all 0.2s;
+  animation: fadeIn 1s ease 1s forwards;
+  /* Delay until after logo */
+  opacity: 0;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
 }
 
 .subtitle:hover {
@@ -163,6 +224,21 @@ html,
   cursor: pointer;
   transition: all 0.2s;
   margin-top: 20px;
+  animation: fadeIn 1s ease 1.2s forwards, pulseGlow 3s infinite 2s;
+  opacity: 0;
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.05);
+    box-shadow: 8px 8px 0px var(--accent);
+  }
 }
 
 .main-cta:hover {
