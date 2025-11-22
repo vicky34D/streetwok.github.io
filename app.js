@@ -23,8 +23,8 @@
       this.originX = x;
       this.originY = y;
       this.color = '#2d2d2d'; // Default dark gray
-      this.baseLength = 2; // Very small base length
-      this.currentLength = this.baseLength;
+      this.baseRadius = 1.5; // Small base radius for dots
+      this.currentRadius = this.baseRadius;
 
       // Calculate angle pointing toward center of screen
       const centerX = window.innerWidth / 2;
@@ -46,11 +46,11 @@
       this.x = this.originX + flowX;
       this.y = this.originY + flowY;
 
-      // Squish/Expand Animation (Line Length)
+      // Squish/Expand Animation (Dot Size)
       const pulse = Math.sin(time * 2 + this.originX * 0.05 + this.originY * 0.05);
 
-      // Length varies: "Squish" (short) to "Expand" (long)
-      this.currentLength = this.baseLength * (1 + pulse * 0.6);
+      // Radius varies: "Squish" (small) to "Expand" (large)
+      this.currentRadius = this.baseRadius * (1 + pulse * 0.5);
 
       // Wave effect calculation
       if (dist < waveRadius) {
@@ -62,7 +62,7 @@
         this.y += wave;
 
         // Expand significantly when wave hits
-        this.currentLength += force * 12;
+        this.currentRadius += force * 4;
 
         // Make area clear & color change
         const alpha = Math.max(0, 1 - force * 1.2);
@@ -75,20 +75,9 @@
 
     draw() {
       ctx.beginPath();
-
-      // Calculate line end points based on angle and length
-      const cos = Math.cos(this.angle);
-      const sin = Math.sin(this.angle);
-      const len = Math.max(0, this.currentLength);
-
-      // Draw line centered at x,y
-      ctx.moveTo(this.x - (cos * len), this.y - (sin * len));
-      ctx.lineTo(this.x + (cos * len), this.y + (sin * len));
-
-      ctx.strokeStyle = this.color;
-      ctx.lineWidth = 1; // Thinner lines
-      ctx.lineCap = 'round';
-      ctx.stroke();
+      ctx.arc(this.x, this.y, Math.max(0, this.currentRadius), 0, Math.PI * 2);
+      ctx.fillStyle = this.color;
+      ctx.fill();
     }
   }
 
