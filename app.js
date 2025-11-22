@@ -13,6 +13,7 @@
   const waveRadius = 250; // Radius of mouse influence
 
   let mouse = { x: -1000, y: -1000 };
+  let isHovering = false;
 
   // Particle Class
   class Particle {
@@ -107,6 +108,14 @@
   function animate() {
     ctx.clearRect(0, 0, width, height);
 
+    // Automatic movement if not hovering
+    if (!isHovering) {
+      const time = Date.now() * 0.001;
+      // Figure-8 / Lissajous pattern
+      mouse.x = width / 2 + Math.sin(time) * (width / 3);
+      mouse.y = height / 2 + Math.cos(time * 1.3) * (height / 3);
+    }
+
     particles.forEach(p => {
       p.update();
       p.draw();
@@ -118,8 +127,12 @@
   // Event Listeners
   window.addEventListener('resize', init);
   window.addEventListener('mousemove', (e) => {
+    isHovering = true;
     mouse.x = e.clientX;
     mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseout', () => {
+    isHovering = false;
   });
 
   // Menu Logic
