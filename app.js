@@ -7,7 +7,7 @@
   let particles = [];
 
   // Configuration
-  const gap = 25; // Distance between dots
+  const gap = 50; // Distance between dots
   const radius = 1.5; // Dot size
   const waveHeight = 60; // Max height of wave
   const waveRadius = 250; // Radius of mouse influence
