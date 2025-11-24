@@ -823,4 +823,32 @@ html,
     height: 32px;
     font-size: 20px;
   }
+
+  /* Mobile Gallery Fixes */
+  .gallery-container {
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+  }
+
+  .gallery-scroll {
+    gap: 12px;
+    flex-wrap: nowrap;
+    /* Force horizontal */
+    justify-content: flex-start;
+  }
+
+  .gallery-img {
+    height: 140px;
+    /* Smaller height for mobile */
+    max-width: 85vw;
+    /* Prevent single image from overflowing width too much */
+    box-shadow: 2px 2px 0px var(--secondary);
+    /* Smaller shadow */
+  }
+
+  .gallery-img:hover {
+    transform: none;
+    /* Disable complex hover effects on touch */
+    box-shadow: 2px 2px 0px var(--secondary);
+  }
 }
