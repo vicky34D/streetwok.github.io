@@ -709,4 +709,53 @@ html,
   .stage {
     height: calc(100% - 250px);
   }
+
+  /* Mobile Menu Fixes */
+  .menu-container {
+    width: 95%;
+    padding: 20px;
+    max-height: 85vh;
+  }
+
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .menu-section {
+    padding: 16px;
+  }
+
+  .menu-title {
+    font-size: 28px;
+    margin-bottom: 24px;
+  }
+
+  .section-title {
+    font-size: 18px;
+  }
+
+  .menu-list li {
+    font-size: 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .menu-list li .price {
+    align-self: flex-end;
+  }
+
+  .menu-list li .dots {
+    display: none;
+    /* Hide dots on mobile as they break the flow */
+  }
+
+  .close-btn {
+    top: 10px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    font-size: 20px;
+  }
 }
