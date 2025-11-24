@@ -172,6 +172,15 @@
   const menuOverlay = document.getElementById('menuOverlay');
   const closeMenu = document.getElementById('closeMenu');
 
+  // Menu Item Selection Interaction
+  const menuItems = document.querySelectorAll('.menu-list li');
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // Toggle selected state
+      item.classList.toggle('selected');
+    });
+  });
+
   // About Logic
   const aboutBtn = document.getElementById('aboutBtn');
   const aboutOverlay = document.getElementById('aboutOverlay');

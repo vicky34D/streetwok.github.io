@@ -409,6 +409,86 @@ html,
   transform: translateY(0);
 }
 
+/* Interactive Menu Items */
+.menu-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border-bottom: 1px dashed var(--border);
+  border-radius: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  position: relative;
+  background: transparent;
+}
+
+.menu-list li:hover {
+  background: var(--surface);
+  transform: translateX(8px);
+  border-left: 4px solid var(--primary);
+  padding-left: 12px;
+  /* Adjust for border width to keep text aligned or let it shift */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.menu-list li.selected {
+  background: var(--primary);
+  color: #fff;
+  transform: scale(1.02);
+  box-shadow: 4px 4px 0px var(--secondary);
+  border: 2px solid var(--secondary);
+  border-bottom: 2px solid var(--secondary);
+  /* Override dashed */
+}
+
+.menu-list li.selected .price {
+  color: #fff;
+}
+
+.menu-list li.selected .dots {
+  border-bottom-color: rgba(255, 255, 255, 0.3);
+}
+
+.price {
+  font-family: var(--font-head);
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 1.1em;
+  transition: color 0.2s;
+}
+
+/* Section Entrance Animations */
+.menu-overlay.active .menu-section {
+  opacity: 0;
+  animation: slideUpFade 0.5s ease forwards;
+}
+
+.menu-overlay.active .menu-section:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.menu-overlay.active .menu-section:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.menu-overlay.active .menu-section:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .close-btn {
   position: absolute;
   top: 20px;
@@ -425,6 +505,7 @@ html,
   justify-content: center;
   transition: all 0.2s;
   color: var(--text);
+  z-index: 10;
 }
 
 .close-btn:hover {
