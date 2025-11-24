@@ -587,11 +587,12 @@ html,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 40px;
+  margin-bottom: 40px;
 }
 
 .menu-section {
   background: var(--surface);
-  padding: 24px;
+  padding: 32px;
   border-radius: 12px;
 }
 
