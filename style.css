@@ -276,24 +276,83 @@ html,
 
 .ride-list li {
   margin-bottom: 10px;
-  padding-left: 20px;
+  padding: 12px 16px;
   position: relative;
   color: var(--secondary);
+  border-bottom: 1px dashed var(--border);
+  border-radius: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  background: transparent;
+}
+
+.ride-list li:hover {
+  background: var(--surface);
+  transform: translateX(8px);
+  border-left: 4px solid var(--primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .ride-list li::before {
   content: '►';
   position: absolute;
-  left: 0;
+  left: 6px;
+  /* Adjusted for padding */
   color: var(--primary);
   font-size: 12px;
-  top: 4px;
+  top: 16px;
+  /* Adjusted for padding */
+  opacity: 0;
+  /* Hide default arrow on hover style if preferred, or keep it */
+  transition: opacity 0.2s;
+}
+
+.ride-list li:hover::before {
+  opacity: 1;
+}
+
+.ride-list li.selected {
+  background: var(--primary);
+  color: #fff;
+  transform: scale(1.02);
+  box-shadow: 4px 4px 0px var(--secondary);
+  border: 2px solid var(--secondary);
+  border-bottom: 2px solid var(--secondary);
+}
+
+.ride-list li.selected::before {
+  color: #fff;
+  opacity: 1;
+}
+
+/* About Section Entrance Animations */
+.menu-overlay.active .about-section {
+  opacity: 0;
+  animation: slideUpFade 0.5s ease forwards;
+}
+
+.menu-overlay.active .about-section:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.menu-overlay.active .about-section:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.menu-overlay.active .about-section:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.menu-overlay.active .about-section:nth-child(4) {
+  animation-delay: 0.4s;
 }
 
 .signature-area {
   margin-top: 40px;
   text-align: right;
   padding-right: 40px;
+  opacity: 0;
+  animation: slideUpFade 0.5s ease 0.5s forwards;
 }
 
 .signature {

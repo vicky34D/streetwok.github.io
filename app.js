@@ -181,6 +181,14 @@
     });
   });
 
+  // Ride List Selection Interaction
+  const rideItems = document.querySelectorAll('.ride-list li');
+  rideItems.forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('selected');
+    });
+  });
+
   // About Logic
   const aboutBtn = document.getElementById('aboutBtn');
   const aboutOverlay = document.getElementById('aboutOverlay');
