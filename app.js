@@ -1,150 +1,134 @@
-// app.js - StreetWok 3D Experience
+// app.js - StreetWok Himalayan Snow Ride
 (function () {
-  // --- 3D SCENE SETUP ---
   const container = document.getElementById('canvas-container');
 
-  // Scene globals
   let scene, camera, renderer;
-  let gridTop, gridBottom;
-  let particles;
+  let terrain;
+  let snowParticles;
 
-  // Interaction globals
+  // Animation Globals
+  let time = 0;
   let mouse = { x: 0, y: 0 };
-  let targetRotation = { x: 0, y: 0 };
-  const windowHalfX = window.innerWidth / 2;
-  const windowHalfY = window.innerHeight / 2;
+  let targetCamX = 0;
+  let targetCamY = 0;
+
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
   function init3D() {
     scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xffffff); // Matches --bg: #ffffff
-    // Add some fog for depth - using a light grey/orange tint
-    scene.fog = new THREE.FogExp2(0xffffff, 0.002);
 
-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    camera.position.z = 200;
-    camera.position.y = 50;
+    // Bright Snow Fog
+    scene.fog = new THREE.FogExp2(0xddeeff, 0.002);
+
+    camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
+    camera.position.set(0, 40, 100);
+    camera.lookAt(0, 10, -100);
 
     renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(width, height);
     renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true; // Enable shadows for riders
     container.appendChild(renderer.domElement);
 
-    // --- OBJECTS ---
+    // --- LIGHTING ---
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambientLight);
 
-    // 1. The "Road" Grid
-    // We create two grids to simulate a ceiling and floor or just a floor
-    // Let's do a floor grid that moves
+    const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    sunLight.position.set(100, 200, 100);
+    sunLight.castShadow = true;
+    sunLight.shadow.mapSize.width = 1024;
+    sunLight.shadow.mapSize.height = 1024;
+    scene.add(sunLight);
 
-    // Grid Helper: size, divisions, colorCenterLine, colorGrid
-    // StreetWok colors: Primary #ff4d00 (Orange), Accent #ffcc00 (Yellow), Secondary #2d2d2d
-    const gridSize = 2000;
-    const gridDivisions = 60;
 
-    // Floor Grid
-    gridBottom = new THREE.GridHelper(gridSize, gridDivisions, 0xff4d00, 0xdddddd);
-    gridBottom.position.y = -50;
-    scene.add(gridBottom);
+    // --- SNOW TERRAIN ---
+    // High poly for smooth snow dunes
+    const geometry = new THREE.PlaneGeometry(800, 800, 80, 80);
+    const pos = geometry.attributes.position;
 
-    // Ceiling Grid (optional, for tunnel effect)
-    gridTop = new THREE.GridHelper(gridSize, gridDivisions, 0xff4d00, 0xdddddd);
-    gridTop.position.y = 150;
-    scene.add(gridTop);
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i);
+      const y = pos.getY(i);
 
-    // 2. Floating Particles (Sparks/Embers)
-    const particleCount = 400;
-    const geometry = new THREE.BufferGeometry();
-    const positions = [];
-    const colors = [];
+      let z = 0;
+      // Smooth rolling hills
+      z += Math.sin(x * 0.01) * 20;
+      z += Math.cos(y * 0.01) * 20;
+      z += Math.sin(x * 0.05 + y * 0.05) * 5;
 
-    const color1 = new THREE.Color(0xff4d00); // Orange
-    const color2 = new THREE.Color(0xffcc00); // Yellow
-    const color3 = new THREE.Color(0x2d2d2d); // Dark Grey
-
-    for (let i = 0; i < particleCount; i++) {
-      // Random positions
-      const x = (Math.random() - 0.5) * 1000;
-      const y = (Math.random() - 0.5) * 500;
-      const z = (Math.random() - 0.5) * 1000;
-      positions.push(x, y, z);
-
-      // Random colors
-      const type = Math.random();
-      let color;
-      if (type < 0.33) color = color1;
-      else if (type < 0.66) color = color2;
-      else color = color3;
-
-      colors.push(color.r, color.g, color.b);
+      pos.setZ(i, z);
     }
 
-    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+    geometry.computeVertexNormals();
+    geometry.rotateX(-Math.PI / 2);
 
-    const material = new THREE.PointsMaterial({
-      size: 4,
-      vertexColors: true,
+    const material = new THREE.MeshStandardMaterial({
+      color: 0xffffff, // Snow White
+      roughness: 0.8,
+      metalness: 0.1,
+      // Emissive slightly blue for snow shadow glow
+      emissive: 0xccddff,
+      emissiveIntensity: 0.2
+    });
+
+    terrain = new THREE.Mesh(geometry, material);
+    terrain.position.y = -30;
+    terrain.receiveShadow = true;
+    scene.add(terrain);
+
+
+    // --- FALLING SNOW ---
+    const snowGeo = new THREE.BufferGeometry();
+    const snowCount = 4000;
+    const snowPos = [];
+    for (let i = 0; i < snowCount; i++) {
+      snowPos.push(
+        (Math.random() - 0.5) * 600,
+        Math.random() * 400 - 100,
+        (Math.random() - 0.5) * 600
+      );
+    }
+    snowGeo.setAttribute('position', new THREE.Float32BufferAttribute(snowPos, 3));
+    const snowMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.5,
       transparent: true,
       opacity: 0.8
     });
-
-    particles = new THREE.Points(geometry, material);
-    scene.add(particles);
-
-    // Lights (mostly for effect if we add meshes later, grids don't need light)
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-    scene.add(ambientLight);
+    snowParticles = new THREE.Points(snowGeo, snowMat);
+    scene.add(snowParticles);
   }
 
   function animate() {
     requestAnimationFrame(animate);
+    time += 0.01;
 
-    const time = Date.now() * 0.001;
+    // --- MOVEMENT ---
+    // Terrain moves backward (z increases)
+    terrain.position.z += 0.5;
+    if (terrain.position.z > 200) terrain.position.z = 0;
 
-    // Move Grids to simulate speed
-    // The grid segment size is gridSize / gridDivisions = 2000 / 60 ≈ 33.33
-    const gridSegment = 2000 / 60;
-    const gridSpeed = 2; // Speed of movement
-
-    if (gridBottom) {
-      gridBottom.position.z += gridSpeed;
-      if (gridBottom.position.z > gridSegment) {
-        gridBottom.position.z = 0;
-      }
+    // Snow falling
+    const sn = snowParticles.geometry.attributes.position.array;
+    for (let i = 1; i < sn.length; i += 3) {
+      sn[i] -= 0.5; // Fall down
+      if (sn[i] < -50) sn[i] = 200; // Reset to top
     }
+    snowParticles.geometry.attributes.position.needsUpdate = true;
+    // Wind effect
+    snowParticles.position.x = Math.sin(time * 0.5) * 10;
 
-    if (gridTop) {
-      gridTop.position.z += gridSpeed;
-      if (gridTop.position.z > gridSegment) {
-        gridTop.position.z = 0;
-      }
-    }
 
-    // Let's move particles towards camera to simulate driving through themove camera or move grid and wrap
+    // --- CAMERA ---
+    targetCamX = (mouse.x - width / 2) * 0.02;
+    targetCamY = (mouse.y - height / 2) * 0.02;
 
-    // Let's move particles towards camera to simulate driving through them
-    const positions = particles.geometry.attributes.position.array;
-    for (let i = 2; i < positions.length; i += 3) {
-      positions[i] += 2; // Move speed
-      if (positions[i] > 300) {
-        positions[i] = -700; // Reset to far back
-      }
-    }
-    particles.geometry.attributes.position.needsUpdate = true;
-
-    // Rotate particles slightly for dynamic feel
-    particles.rotation.z = time * 0.05;
-
-    // Camera Interaction
-    // Smooth follow mouse
-    targetRotation.x = (mouse.x - windowHalfX) * 0.0005;
-    targetRotation.y = (mouse.y - windowHalfY) * 0.0005;
-
-    camera.rotation.x += 0.05 * (targetRotation.y - camera.rotation.x);
-    camera.rotation.y += 0.05 * (-targetRotation.x - camera.rotation.y);
-
-    // Subtle sway
-    camera.position.x += Math.sin(time) * 0.5;
-    camera.position.y += Math.cos(time * 0.8) * 0.5;
+    // Camera follows slightly but stays focused on journey
+    camera.position.x += (targetCamX - camera.position.x) * 0.02;
+    camera.position.y += (targetCamY + 40 - camera.position.y) * 0.02;
+    camera.lookAt(0, 0, -100);
 
     renderer.render(scene, camera);
   }
@@ -155,82 +139,36 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
   }
 
-  function onDocumentMouseMove(event) {
+  function onMouseMove(event) {
     mouse.x = event.clientX;
     mouse.y = event.clientY;
-
-    // Also keep the CSS parallax effect if desired, or remove it. 
-    // The previous CSS parallax was nice, let's keep it but mapped to 3D now.
   }
 
-  // Initialize 3D
   if (container) {
-    window.addEventListener('resize', onWindowResize, false);
-    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    window.addEventListener('resize', onWindowResize);
+    document.addEventListener('mousemove', onMouseMove);
     init3D();
     animate();
   }
 
-
-  // --- UI LOGIC (PRESERVED) ---
-
-  // Menu Logic
+  // UI LOGIC (Preserved)
   const menuBtn = document.getElementById('menuBtn');
   const menuOverlay = document.getElementById('menuOverlay');
   const closeMenu = document.getElementById('closeMenu');
 
-  // Menu Item Selection Interaction
-  const menuItems = document.querySelectorAll('.menu-list li');
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      // Toggle selected state
-      item.classList.toggle('selected');
-    });
-  });
-
-  // Ride List Selection Interaction
-  const rideItems = document.querySelectorAll('.ride-list li');
-  rideItems.forEach(item => {
-    item.addEventListener('click', () => {
-      item.classList.toggle('selected');
-    });
-  });
-
-  // About Logic
   const aboutBtn = document.getElementById('aboutBtn');
   const aboutOverlay = document.getElementById('aboutOverlay');
   const closeAbout = document.getElementById('closeAbout');
 
-  if (menuBtn && menuOverlay && closeMenu) {
-    menuBtn.addEventListener('click', () => {
-      menuOverlay.classList.add('active');
-    });
+  function openOverlay(overlay) { if (overlay) overlay.classList.add('active'); }
+  function closeOverlay(overlay) { if (overlay) overlay.classList.remove('active'); }
 
-    closeMenu.addEventListener('click', () => {
-      menuOverlay.classList.remove('active');
-    });
-
-    menuOverlay.addEventListener('click', (e) => {
-      if (e.target === menuOverlay) {
-        menuOverlay.classList.remove('active');
-      }
-    });
-  }
-
-  if (aboutBtn && aboutOverlay && closeAbout) {
-    aboutBtn.addEventListener('click', () => {
-      aboutOverlay.classList.add('active');
-    });
-
-    closeAbout.addEventListener('click', () => {
-      aboutOverlay.classList.remove('active');
-    });
-
-    aboutOverlay.addEventListener('click', (e) => {
-      if (e.target === aboutOverlay) {
-        aboutOverlay.classList.remove('active');
-      }
-    });
-  }
+  if (menuBtn) menuBtn.addEventListener('click', () => openOverlay(menuOverlay));
+  if (closeMenu) closeMenu.addEventListener('click', () => closeOverlay(menuOverlay));
+  if (aboutBtn) aboutBtn.addEventListener('click', () => openOverlay(aboutOverlay));
+  if (closeAbout) closeAbout.addEventListener('click', () => closeOverlay(aboutOverlay));
+  [menuOverlay, aboutOverlay].forEach(overlay => {
+    if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay); });
+  });
 
 })();
