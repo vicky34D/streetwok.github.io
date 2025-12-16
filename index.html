@@ -33,7 +33,6 @@
 </head>
 
 <body>
-  <div id="price-header" class="price-header">TOTAL: ₹0</div>
   <div id="canvas-container"></div>
 
   <div class="center-content">
@@ -164,6 +163,34 @@
   <footer class="footer">
     <small>STREETWOK MOTO-CAFE // EST. 2024 // RIDE HARD • EAT WELL</small>
   </footer>
+  </div>
+
+  <!-- Bottom Cart Panel -->
+  <div id="cartPanel" class="cart-panel">
+    <!-- Collapsed Header -->
+    <div class="cart-header" id="cartHeader">
+      <div class="cart-summary">
+        <span id="cartCount">0 ITEMS</span>
+        <span class="divider">|</span>
+        <span id="cartTotal">₹0</span>
+      </div>
+      <button class="view-cart-btn" id="toggleCartBtn">VIEW CART &uarr;</button>
+    </div>
+
+    <!-- Expanded Content -->
+    <div class="cart-content">
+      <h3 class="cart-title">Your Order</h3>
+      <ul id="cartItemsList" class="cart-items-list">
+        <!-- Items added dynamically -->
+      </ul>
+      <div class="cart-footer-bill">
+        <div class="bill-row total">
+          <span>Grand Total</span>
+          <span id="cartFinalTotal">₹0</span>
+        </div>
+        <button class="checkout-btn">PROCEED TO PAY</button>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>

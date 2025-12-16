@@ -151,43 +151,116 @@
     animate();
   }
 
-  // Price Calculation Logic
-  const priceHeader = document.getElementById('price-header');
-  let totalPrice = 0;
+  // --- CART LOGIC ---
+  const cartPanel = document.getElementById('cartPanel');
+  const cartHeader = document.getElementById('cartHeader');
+  const cartCountEl = document.getElementById('cartCount');
+  const cartTotalEl = document.getElementById('cartTotal');
+  const cartFinalTotalEl = document.getElementById('cartFinalTotal');
+  const cartItemsList = document.getElementById('cartItemsList');
+  const toggleCartBtn = document.getElementById('toggleCartBtn');
 
-  function updatePriceHeader() {
-    if (priceHeader) {
-      priceHeader.innerText = `TOTAL: ₹${totalPrice}`;
-      if (totalPrice > 0) {
-        priceHeader.classList.add('visible');
-      } else {
-        priceHeader.classList.remove('visible');
-      }
+  // State
+  let cart = []; // Array of objects: { name, price, element }
+
+  function updateCartUI() {
+    // 1. Update Summary
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const count = cart.length;
+
+    cartCountEl.innerText = `${count} ITEMS`;
+    cartTotalEl.innerText = `₹${total}`;
+    cartFinalTotalEl.innerText = `₹${total}`;
+
+    // 2. Visibility
+    if (count > 0) {
+      cartPanel.classList.add('visible');
+    } else {
+      cartPanel.classList.remove('visible');
+      cartPanel.classList.remove('expanded'); // Auto collapse if empty
+      toggleCartBtn.innerHTML = 'VIEW CART &uarr;';
     }
+
+    // 3. Render Items
+    cartItemsList.innerHTML = '';
+    cart.forEach((item, index) => {
+      const li = document.createElement('li');
+      li.className = 'cart-item';
+      li.innerHTML = `
+        <span class="item-name">${item.name}</span>
+        <span class="item-price">₹${item.price}</span>
+        <button class="remove-item-btn" data-index="${index}">REMOVE</button>
+      `;
+      cartItemsList.appendChild(li);
+    });
+
+    // 4. Attach Listeners to new Remove Buttons
+    const removeBtns = cartItemsList.querySelectorAll('.remove-item-btn');
+    removeBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.index);
+        removeFromCart(idx);
+      });
+    });
+  }
+
+  function addToCart(name, price, element) {
+    cart.push({ name, price, element });
+    updateCartUI();
+  }
+
+  function removeFromCart(index) {
+    const item = cart[index];
+    // Deselect the original menu item
+    if (item.element) {
+      item.element.classList.remove('selected');
+    }
+    // Remove from array
+    cart.splice(index, 1);
+    updateCartUI();
+  }
+
+  // Toggle Cart Expansion
+  if (cartHeader) {
+    cartHeader.addEventListener('click', () => {
+      cartPanel.classList.toggle('expanded');
+      const isExpanded = cartPanel.classList.contains('expanded');
+      toggleCartBtn.innerHTML = isExpanded ? 'CLOSE &darr;' : 'VIEW CART &uarr;';
+    });
   }
 
   // Menu Item Selection Interaction
   const menuItems = document.querySelectorAll('.menu-list li');
   menuItems.forEach(item => {
     item.addEventListener('click', () => {
-      // Toggle selected state
-      item.classList.toggle('selected');
+      // Toggle selected state visually checked by class
+      const isSelected = item.classList.contains('selected');
 
-      // Parse Price
+      // Parse Info
+      const nameEl = item.querySelector('span:first-child');
+      const name = nameEl ? nameEl.innerText.split(' - ')[0] : 'Item'; // Simple name
+
       const priceElement = item.querySelector('.price');
       if (priceElement) {
         const text = priceElement.innerText;
-        // Extract first number found
         const match = text.match(/(\d+)/);
         if (match) {
           const price = parseInt(match[0], 10);
 
-          if (item.classList.contains('selected')) {
-            totalPrice += price;
+          if (!isSelected) {
+            // Select and Add
+            item.classList.add('selected');
+            addToCart(name, price, item);
           } else {
-            totalPrice -= price;
+            // Deselect and Remove (find first instance in cart)
+            item.classList.remove('selected');
+            const idx = cart.findIndex(c => c.element === item);
+            if (idx > -1) {
+              // We call splice directly here to avoid re-triggering class removal loop
+              cart.splice(idx, 1);
+              updateCartUI();
+            }
           }
-          updatePriceHeader();
         }
       }
     });
