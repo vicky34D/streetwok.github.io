@@ -1,171 +1,178 @@
-// app.js - StreetWok Wave Effect
+// app.js - StreetWok 3D Experience
 (function () {
-  const canvas = document.getElementById('waveCanvas');
-  const ctx = canvas.getContext('2d');
+  // --- 3D SCENE SETUP ---
+  const container = document.getElementById('canvas-container');
 
-  let width, height;
-  let particles = [];
+  // Scene globals
+  let scene, camera, renderer;
+  let gridTop, gridBottom;
+  let particles;
 
-  // Configuration
-  const gap = 80; // Distance between lines (increased for fewer lines)
-  const radius = 1.5; // Dot size (not used for lines)
-  const waveHeight = 60; // Max height of wave
-  const waveRadius = 250; // Radius of mouse influence
+  // Interaction globals
+  let mouse = { x: 0, y: 0 };
+  let targetRotation = { x: 0, y: 0 };
+  const windowHalfX = window.innerWidth / 2;
+  const windowHalfY = window.innerHeight / 2;
 
-  let mouse = { x: -1000, y: -1000 };
-  let isHovering = false;
+  function init3D() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff); // Matches --bg: #ffffff
+    // Add some fog for depth - using a light grey/orange tint
+    scene.fog = new THREE.FogExp2(0xffffff, 0.002);
 
-  // Particle Class
-  class Particle {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-      this.originX = x;
-      this.originY = y;
-      this.color = '#2d2d2d'; // Default dark gray
-      this.baseRadius = 1.5; // Small base radius for dots
-      this.currentRadius = this.baseRadius;
+    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 200;
+    camera.position.y = 50;
 
-      // Calculate angle pointing toward center of screen
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      this.angle = Math.atan2(centerY - y, centerX - x);
+    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // --- OBJECTS ---
+
+    // 1. The "Road" Grid
+    // We create two grids to simulate a ceiling and floor or just a floor
+    // Let's do a floor grid that moves
+
+    // Grid Helper: size, divisions, colorCenterLine, colorGrid
+    // StreetWok colors: Primary #ff4d00 (Orange), Accent #ffcc00 (Yellow), Secondary #2d2d2d
+    const gridSize = 2000;
+    const gridDivisions = 60;
+
+    // Floor Grid
+    gridBottom = new THREE.GridHelper(gridSize, gridDivisions, 0xff4d00, 0xdddddd);
+    gridBottom.position.y = -50;
+    scene.add(gridBottom);
+
+    // Ceiling Grid (optional, for tunnel effect)
+    gridTop = new THREE.GridHelper(gridSize, gridDivisions, 0xff4d00, 0xdddddd);
+    gridTop.position.y = 150;
+    scene.add(gridTop);
+
+    // 2. Floating Particles (Sparks/Embers)
+    const particleCount = 400;
+    const geometry = new THREE.BufferGeometry();
+    const positions = [];
+    const colors = [];
+
+    const color1 = new THREE.Color(0xff4d00); // Orange
+    const color2 = new THREE.Color(0xffcc00); // Yellow
+    const color3 = new THREE.Color(0x2d2d2d); // Dark Grey
+
+    for (let i = 0; i < particleCount; i++) {
+      // Random positions
+      const x = (Math.random() - 0.5) * 1000;
+      const y = (Math.random() - 0.5) * 500;
+      const z = (Math.random() - 0.5) * 1000;
+      positions.push(x, y, z);
+
+      // Random colors
+      const type = Math.random();
+      let color;
+      if (type < 0.33) color = color1;
+      else if (type < 0.66) color = color2;
+      else color = color3;
+
+      colors.push(color.r, color.g, color.b);
     }
 
-    update() {
-      // Calculate distance from mouse
-      const dx = mouse.x - this.originX;
-      const dy = mouse.y - this.originY;
-      const dist = Math.sqrt(dx * dx + dy * dy);
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
 
-      // Jellyfish-like flowing motion
-      const time = Date.now() * 0.002;
-      const flowX = Math.sin(time + this.originY * 0.01) * 3;
-      const flowY = Math.cos(time + this.originX * 0.01) * 3;
+    const material = new THREE.PointsMaterial({
+      size: 4,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8
+    });
 
-      this.x = this.originX + flowX;
-      this.y = this.originY + flowY;
+    particles = new THREE.Points(geometry, material);
+    scene.add(particles);
 
-      // Squish/Expand Animation (Dot Size)
-      const pulse = Math.sin(time * 2 + this.originX * 0.05 + this.originY * 0.05);
-
-      // Radius varies: "Squish" (small) to "Expand" (large)
-      this.currentRadius = this.baseRadius * (1 + pulse * 0.5);
-
-      // Wave effect calculation
-      if (dist < waveRadius) {
-        const angle = Math.atan2(dy, dx);
-        const force = (waveRadius - dist) / waveRadius;
-
-        // Create a ripple/wave effect
-        const wave = Math.sin(dist * 0.05 - Date.now() * 0.005) * waveHeight * force;
-        this.y += wave;
-
-        // Expand significantly when wave hits
-        this.currentRadius += force * 4;
-
-        // Make area clear & color change
-        const alpha = Math.max(0, 1 - force * 1.2);
-        this.color = `rgba(255, 77, 0, ${alpha})`;
-
-      } else {
-        this.color = '#2d2d2d';
-      }
-    }
-
-    draw() {
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, Math.max(0, this.currentRadius), 0, Math.PI * 2);
-      ctx.fillStyle = this.color;
-      ctx.fill();
-    }
-  }
-
-  function init() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-
-    particles = [];
-
-    // Create grid of particles
-    // We only need enough to fill the screen
-    // Center the grid
-    const cols = Math.ceil(width / gap);
-    const rows = Math.ceil(height / gap);
-
-    const startX = (width - cols * gap) / 2;
-    const startY = (height - rows * gap) / 2;
-
-    for (let i = 0; i < cols; i++) {
-      for (let j = 0; j < rows; j++) {
-        // Randomize position slightly to break the grid lines
-        const randX = (Math.random() - 0.5) * gap * 0.8;
-        const randY = (Math.random() - 0.5) * gap * 0.8;
-
-        const x = startX + i * gap + randX;
-        const y = startY + j * gap + randY;
-
-        // Calculate distance from center of screen
-        const dx = x - width / 2;
-        const dy = y - height / 2;
-
-        // Oval exclusion zone
-        // We want particles ONLY outside the oval
-        const radiusX = 380; // Horizontal radius
-        const radiusY = 220; // Vertical radius
-
-        // Ellipse equation: (x²/a²) + (y²/b²) > 1 means outside
-        if ((dx * dx) / (radiusX * radiusX) + (dy * dy) / (radiusY * radiusY) > 1) {
-          particles.push(new Particle(x, y));
-        }
-      }
-    }
+    // Lights (mostly for effect if we add meshes later, grids don't need light)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+    scene.add(ambientLight);
   }
 
   function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    // Automatic movement if not hovering
-    if (!isHovering) {
-      const time = Date.now() * 0.0003; // Slower speed
-      // Figure-8 / Lissajous pattern
-      mouse.x = width / 2 + Math.sin(time) * (width / 3);
-      mouse.y = height / 2 + Math.cos(time * 1.3) * (height / 3);
-    }
-
-    particles.forEach(p => {
-      p.update();
-      p.draw();
-    });
-
     requestAnimationFrame(animate);
-  }
 
-  // Event Listeners
-  window.addEventListener('resize', init);
-  window.addEventListener('mousemove', (e) => {
-    isHovering = true;
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
+    const time = Date.now() * 0.001;
 
-    // Parallax Effect for Background
-    // Only on desktop
-    if (window.innerWidth > 768) {
-      const moveX = (e.clientX - width / 2) * 0.02;
-      const moveY = (e.clientY - height / 2) * 0.02;
+    // Move Grids to simulate speed
+    // The grid segment size is gridSize / gridDivisions = 2000 / 60 ≈ 33.33
+    const gridSegment = 2000 / 60;
+    const gridSpeed = 2; // Speed of movement
 
-      // We target the background overlay by changing the container's perspective or transform
-      // Since the background is a pseudo-element of .center-content, we can't move it directly.
-      // However, we can move the .center-content slightly to give a floating feel.
-      const content = document.querySelector('.center-content');
-      if (content) {
-        content.style.transform = `translate(calc(-50% + ${-moveX}px), calc(-50% + ${-moveY}px))`;
+    if (gridBottom) {
+      gridBottom.position.z += gridSpeed;
+      if (gridBottom.position.z > gridSegment) {
+        gridBottom.position.z = 0;
       }
     }
-  });
-  window.addEventListener('mouseout', () => {
-    isHovering = false;
-  });
+
+    if (gridTop) {
+      gridTop.position.z += gridSpeed;
+      if (gridTop.position.z > gridSegment) {
+        gridTop.position.z = 0;
+      }
+    }
+
+    // Let's move particles towards camera to simulate driving through themove camera or move grid and wrap
+
+    // Let's move particles towards camera to simulate driving through them
+    const positions = particles.geometry.attributes.position.array;
+    for (let i = 2; i < positions.length; i += 3) {
+      positions[i] += 2; // Move speed
+      if (positions[i] > 300) {
+        positions[i] = -700; // Reset to far back
+      }
+    }
+    particles.geometry.attributes.position.needsUpdate = true;
+
+    // Rotate particles slightly for dynamic feel
+    particles.rotation.z = time * 0.05;
+
+    // Camera Interaction
+    // Smooth follow mouse
+    targetRotation.x = (mouse.x - windowHalfX) * 0.0005;
+    targetRotation.y = (mouse.y - windowHalfY) * 0.0005;
+
+    camera.rotation.x += 0.05 * (targetRotation.y - camera.rotation.x);
+    camera.rotation.y += 0.05 * (-targetRotation.x - camera.rotation.y);
+
+    // Subtle sway
+    camera.position.x += Math.sin(time) * 0.5;
+    camera.position.y += Math.cos(time * 0.8) * 0.5;
+
+    renderer.render(scene, camera);
+  }
+
+  function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  function onDocumentMouseMove(event) {
+    mouse.x = event.clientX;
+    mouse.y = event.clientY;
+
+    // Also keep the CSS parallax effect if desired, or remove it. 
+    // The previous CSS parallax was nice, let's keep it but mapped to 3D now.
+  }
+
+  // Initialize 3D
+  if (container) {
+    window.addEventListener('resize', onWindowResize, false);
+    document.addEventListener('mousemove', onDocumentMouseMove, false);
+    init3D();
+    animate();
+  }
+
+
+  // --- UI LOGIC (PRESERVED) ---
 
   // Menu Logic
   const menuBtn = document.getElementById('menuBtn');
@@ -225,9 +232,5 @@
       }
     });
   }
-
-  // Initialize
-  init();
-  animate();
 
 })();
