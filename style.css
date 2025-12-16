@@ -351,3 +351,30 @@ html {
     border: none;
   }
 }
+
+/* Price Header */
+.price-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 0;
+  background: rgba(0, 0, 0, 0.85);
+  /* Dark background */
+  color: #cba16e;
+  /* Primary Gold Text */
+  text-align: center;
+  font-family: var(--font-hero);
+  font-size: 1.8rem;
+  z-index: 2000;
+  /* Above everything */
+  border-bottom: 2px solid #cba16e;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+  letter-spacing: 2px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.price-header.visible {
+  transform: translateY(0);
+}

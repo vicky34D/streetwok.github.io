@@ -151,6 +151,56 @@
     animate();
   }
 
+  // Price Calculation Logic
+  const priceHeader = document.getElementById('price-header');
+  let totalPrice = 0;
+
+  function updatePriceHeader() {
+    if (priceHeader) {
+      priceHeader.innerText = `TOTAL: ₹${totalPrice}`;
+      if (totalPrice > 0) {
+        priceHeader.classList.add('visible');
+      } else {
+        priceHeader.classList.remove('visible');
+      }
+    }
+  }
+
+  // Menu Item Selection Interaction
+  const menuItems = document.querySelectorAll('.menu-list li');
+  menuItems.forEach(item => {
+    item.addEventListener('click', () => {
+      // Toggle selected state
+      item.classList.toggle('selected');
+
+      // Parse Price
+      const priceElement = item.querySelector('.price');
+      if (priceElement) {
+        const text = priceElement.innerText;
+        // Extract first number found
+        const match = text.match(/(\d+)/);
+        if (match) {
+          const price = parseInt(match[0], 10);
+
+          if (item.classList.contains('selected')) {
+            totalPrice += price;
+          } else {
+            totalPrice -= price;
+          }
+          updatePriceHeader();
+        }
+      }
+    });
+  });
+
+  // Ride List Selection Interaction
+  const rideItems = document.querySelectorAll('.ride-list li');
+  rideItems.forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('selected');
+    });
+  });
+
   // UI LOGIC (Preserved)
   const menuBtn = document.getElementById('menuBtn');
   const menuOverlay = document.getElementById('menuOverlay');
