@@ -161,11 +161,11 @@
   const toggleCartBtn = document.getElementById('toggleCartBtn');
 
   // State
-  let cart = []; // Array of objects: { name, price, quantity, element }
+  let cart = []; // Array of objects: { name, prices: [], selectedSizeIndex, quantity, element }
 
   function updateCartUI() {
     // 1. Update Summary
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = cart.reduce((sum, item) => sum + (item.prices[item.selectedSizeIndex] * item.quantity), 0);
     const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     cartCountEl.innerText = `${count} ITEMS`;
@@ -184,11 +184,26 @@
     // 3. Render Items
     cartItemsList.innerHTML = '';
     cart.forEach((item, index) => {
+      const currentPrice = item.prices[item.selectedSizeIndex];
+      const hasSizeOptions = item.prices.length > 1;
+
       const li = document.createElement('li');
       li.className = 'cart-item';
+
+      let sizeHtml = '';
+      if (hasSizeOptions) {
+        sizeHtml = `
+          <div class="size-controls">
+            <button class="size-btn ${item.selectedSizeIndex === 0 ? 'active' : ''}" data-index="${index}" data-size="0">S</button>
+            <button class="size-btn ${item.selectedSizeIndex === 1 ? 'active' : ''}" data-index="${index}" data-size="1">L</button>
+          </div>
+        `;
+      }
+
       li.innerHTML = `
         <span class="item-name">${item.name}</span>
-        <span class="item-price">₹${item.price * item.quantity}</span>
+        ${sizeHtml}
+        <span class="item-price">₹${currentPrice * item.quantity}</span>
         <div class="qty-controls">
             <button class="qty-btn minus" data-index="${index}">-</button>
             <span class="qty-val">${item.quantity}</span>
@@ -198,31 +213,30 @@
       cartItemsList.appendChild(li);
     });
 
-    // 4. Attach Listeners to Quantity Buttons
-    const minusBtns = cartItemsList.querySelectorAll('.minus');
-    const plusBtns = cartItemsList.querySelectorAll('.plus');
-
-    minusBtns.forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        updateQuantity(idx, -1);
-      });
+    // 4. Attach Listeners
+    // Quantity
+    cartItemsList.querySelectorAll('.minus').forEach(btn => {
+      btn.addEventListener('click', (e) => updateQuantity(parseInt(e.target.dataset.index), -1));
     });
-
-    plusBtns.forEach(btn => {
+    cartItemsList.querySelectorAll('.plus').forEach(btn => {
+      btn.addEventListener('click', (e) => updateQuantity(parseInt(e.target.dataset.index), 1));
+    });
+    // Size
+    cartItemsList.querySelectorAll('.size-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         const idx = parseInt(e.target.dataset.index);
-        updateQuantity(idx, 1);
+        const sizeIdx = parseInt(e.target.dataset.size);
+        updateSize(idx, sizeIdx);
       });
     });
   }
 
-  function addToCart(name, price, element) {
+  function addToCart(name, prices, element) {
     const existingItem = cart.find(item => item.name === name);
     if (existingItem) {
       existingItem.quantity += 1;
     } else {
-      cart.push({ name, price, quantity: 1, element });
+      cart.push({ name, prices, selectedSizeIndex: 0, quantity: 1, element });
     }
     updateCartUI();
   }
@@ -238,6 +252,11 @@
       }
       cart.splice(index, 1);
     }
+    updateCartUI();
+  }
+
+  function updateSize(index, sizeIndex) {
+    cart[index].selectedSizeIndex = sizeIndex;
     updateCartUI();
   }
 
@@ -264,14 +283,16 @@
       const priceElement = item.querySelector('.price');
       if (priceElement) {
         const text = priceElement.innerText;
-        const match = text.match(/(\d+)/);
-        if (match) {
-          const price = parseInt(match[0], 10);
+        // Match ALL numbers (e.g. "49 / 79" -> ["49", "79"])
+        const match = text.match(/(\d+)/g);
+
+        if (match && match.length > 0) {
+          const prices = match.map(p => parseInt(p, 10));
 
           if (!isSelected) {
             // Select and Add
             item.classList.add('selected');
-            addToCart(name, price, item);
+            addToCart(name, prices, item);
           } else {
             // Deselect and Remove (find first instance in cart)
             item.classList.remove('selected');
