@@ -161,12 +161,12 @@
   const toggleCartBtn = document.getElementById('toggleCartBtn');
 
   // State
-  let cart = []; // Array of objects: { name, price, element }
+  let cart = []; // Array of objects: { name, price, quantity, element }
 
   function updateCartUI() {
     // 1. Update Summary
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    const count = cart.length;
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
 
     cartCountEl.innerText = `${count} ITEMS`;
     cartTotalEl.innerText = `₹${total}`;
@@ -188,35 +188,56 @@
       li.className = 'cart-item';
       li.innerHTML = `
         <span class="item-name">${item.name}</span>
-        <span class="item-price">₹${item.price}</span>
-        <button class="remove-item-btn" data-index="${index}">REMOVE</button>
+        <span class="item-price">₹${item.price * item.quantity}</span>
+        <div class="qty-controls">
+            <button class="qty-btn minus" data-index="${index}">-</button>
+            <span class="qty-val">${item.quantity}</span>
+            <button class="qty-btn plus" data-index="${index}">+</button>
+        </div>
       `;
       cartItemsList.appendChild(li);
     });
 
-    // 4. Attach Listeners to new Remove Buttons
-    const removeBtns = cartItemsList.querySelectorAll('.remove-item-btn');
-    removeBtns.forEach(btn => {
+    // 4. Attach Listeners to Quantity Buttons
+    const minusBtns = cartItemsList.querySelectorAll('.minus');
+    const plusBtns = cartItemsList.querySelectorAll('.plus');
+
+    minusBtns.forEach(btn => {
       btn.addEventListener('click', (e) => {
         const idx = parseInt(e.target.dataset.index);
-        removeFromCart(idx);
+        updateQuantity(idx, -1);
+      });
+    });
+
+    plusBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.index);
+        updateQuantity(idx, 1);
       });
     });
   }
 
   function addToCart(name, price, element) {
-    cart.push({ name, price, element });
+    const existingItem = cart.find(item => item.name === name);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ name, price, quantity: 1, element });
+    }
     updateCartUI();
   }
 
-  function removeFromCart(index) {
+  function updateQuantity(index, change) {
     const item = cart[index];
-    // Deselect the original menu item
-    if (item.element) {
-      item.element.classList.remove('selected');
+    item.quantity += change;
+
+    if (item.quantity <= 0) {
+      // Remove item
+      if (item.element) {
+        item.element.classList.remove('selected');
+      }
+      cart.splice(index, 1);
     }
-    // Remove from array
-    cart.splice(index, 1);
     updateCartUI();
   }
 

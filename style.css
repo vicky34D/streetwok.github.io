@@ -80,6 +80,7 @@ html {
   /* Metallic/Ice Gradient */
   background: linear-gradient(180deg, #2c3e50 0%, #bdc3c7 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   transform-origin: bottom;
   transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -91,12 +92,13 @@ html {
   transform: translateY(-10px) scale(1.05);
   background: linear-gradient(180deg, var(--primary) 0%, #fff 100%);
   -webkit-background-clip: text;
+  background-clip: text;
 }
 
 /* Subtitle - The Tagline */
 .subtitle {
   font-family: var(--font-ui);
-  color: var(--primary);
+  color: #000;
   font-size: 1.1rem;
   letter-spacing: 0.8em;
   text-transform: uppercase;
@@ -496,15 +498,41 @@ html {
   margin: 0 15px;
 }
 
-.remove-item-btn {
-  background: #ffebee;
-  color: #d32f2f;
-  border: none;
+.qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f2f6;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.qty-btn {
+  background: #fff;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 5px 10px;
-  font-size: 0.8rem;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  font-weight: 700;
+  color: #1a252f;
+  transition: all 0.2s;
+}
+
+.qty-btn:hover {
+  background: #1a252f;
+  color: #cba16e;
+  border-color: #1a252f;
+}
+
+.qty-val {
   font-weight: 600;
+  min-width: 20px;
+  text-align: center;
+  color: #1a252f;
 }
 
 /* Bill Footer */
