@@ -3,219 +3,117 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>StreetWok — The Ultimate Bike Café</title>
-  <meta name="description"
-    content="StreetWok - The Biker's Cafe. Join our community, enjoy bold flavors, and share your ride stories.">
-
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="StreetWok — The Ultimate Bike Café">
-  <meta property="og:description"
-    content="StreetWok - The Biker's Cafe. Join our community, enjoy bold flavors, and share your ride stories.">
-  <meta property="og:image" content="bike_bg.png">
-
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:title" content="StreetWok — The Ultimate Bike Café">
-  <meta property="twitter:description"
-    content="StreetWok - The Biker's Cafe. Join our community, enjoy bold flavors, and share your ride stories.">
-  <meta property="twitter:image" content="bike_bg.png">
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Teko:wght@400;600&family=Rajdhani:wght@500;600;700&family=Sacramento&display=swap"
-    rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Streetwok - The Biker's Cafe Menu</title>
+  <meta name="description" content="Streetwok menu with burgers, fried chicken, momos, fries, chai, coffee, and combo boxes." />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Streetwok - The Biker's Cafe" />
+  <meta property="og:description" content="Bold burgers, fried chicken, momos, fries, chai, coffee, and combo boxes." />
+  <meta property="og:image" content="bike_bg.png" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23d71920'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-size='28' font-weight='900' fill='white'%3ESW%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
-  <!-- Three.js CDN -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 
 <body>
-  <div id="canvas-container"></div>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Streetwok home">
+      <span class="brand-mark">SW</span>
+      <span>
+        <strong>Streetwok</strong>
+        <small>the biker's cafe</small>
+      </span>
+    </a>
+    <nav class="header-nav" aria-label="Main navigation">
+      <a href="#menu">Menu</a>
+      <a href="#combos">Combos</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <a class="order-link" href="tel:+916290591422">Call Now</a>
+  </header>
 
-  <div class="center-content">
-    <div class="logo" id="logo">
-      <div class="letter">S</div>
-      <div class="letter">T</div>
-      <div class="letter">R</div>
-      <div class="letter">E</div>
-      <div class="letter">E</div>
-      <div class="letter">T</div>
-      <div class="letter">W</div>
-      <div class="letter">O</div>
-      <div class="letter">K</div>
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="kicker">Fresh fried. Street hot. Ride ready.</p>
+        <h1 id="hero-title">Streetwok Bucket Menu</h1>
+        <p class="hero-text">Burgers, popcorn chicken, peri peri strips, momos, fries, chai, and boxes built for hungry riders.</p>
+        <div class="hero-actions">
+          <a class="primary-btn" href="#menu">View Menu</a>
+          <a class="ghost-btn" href="#combos">See Combos</a>
+        </div>
+      </div>
+      <div class="hero-board" aria-label="Featured Streetwok combo">
+        <div class="deal-ribbon">Signature Deal</div>
+        <img src="https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=1000&q=85" alt="Streetwok signature combo with fried chicken and loaded fries" />
+        <div class="hero-deal">
+          <span>Peri Peri Strips + Loaded Fries</span>
+          <strong>₹199</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="quick-strip" aria-label="Streetwok highlights">
+      <div>
+        <strong>₹39</strong>
+        <span>Add fries on selected items</span>
+      </div>
+      <div>
+        <strong>₹129</strong>
+        <span>Saver combo starts</span>
+      </div>
+      <div>
+        <strong>6290591422</strong>
+        <span>Order by phone</span>
+      </div>
+    </section>
+
+    <section id="combos" class="section-wrap">
+      <div class="section-heading">
+        <p class="kicker">Combo boxes</p>
+        <h2>Streetwok Signature Combos</h2>
+      </div>
+      <div class="combo-grid" id="comboGrid"></div>
+    </section>
+
+    <section id="menu" class="section-wrap menu-section">
+      <div class="section-heading">
+        <p class="kicker">Full menu</p>
+        <h2>Choose Your Cravings</h2>
+      </div>
+      <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="Menu categories"></div>
+      <div class="menu-grid" id="menuGrid"></div>
+    </section>
+
+    <section class="community" id="contact">
+      <div>
+        <p class="kicker">Join our community</p>
+        <h2>@streetwok9</h2>
+        <p>Streetwok - the biker's cafe. Bring the crew, grab a box, and make the next food stop loud.</p>
+      </div>
+      <div class="contact-card">
+        <span>Phone</span>
+        <a href="tel:+916290591422">6290591422</a>
+      </div>
+    </section>
+  </main>
+
+  <aside class="bucket" id="bucket" aria-label="Order bucket">
+    <button class="bucket-toggle" id="bucketToggle" type="button">
+      <span><b id="bucketCount">0</b> items</span>
+      <strong id="bucketTotal">₹0</strong>
+    </button>
+    <div class="bucket-panel">
+      <div class="bucket-head">
+        <h2>Your Bucket</h2>
+        <button id="clearBucket" type="button">Clear</button>
+      </div>
+      <ul id="bucketItems" class="bucket-items"></ul>
+      <a id="whatsappOrder" class="primary-btn checkout" href="#" target="_blank" rel="noreferrer">Order on WhatsApp</a>
     </div>
-    <div class="subtitle" id="aboutBtn">THE BIKER'S CAFE</div>
-    <button id="menuBtn" class="main-cta">VIEW MENU</button>
-  </div>
-
-  <!-- About Us Overlay -->
-  <div id="aboutOverlay" class="menu-overlay">
-    <div class="menu-container about-container">
-      <button id="closeAbout" class="close-btn">&times;</button>
-      <h2 class="menu-title">OUR STORY</h2>
-
-      <div class="about-grid">
-        <div class="about-section">
-          <h3 class="section-title">OUR MOTO</h3>
-          <p>Our motto is to build a strong and welcoming bikers community — a place where riders can connect, share
-            their journeys, support each other, and feel at home. At StreetWok Bikers Café, every visit is more than
-            just food; it's about creating bonds, celebrating the passion for riding, and growing together as a united
-            biking family.</p>
-        </div>
-
-        <div class="about-section">
-          <h3 class="section-title">ABOUT OUR CAFE</h3>
-          <p>Located in the heart of Mukundapur, StreetWok is more than a pitstop. It's a sanctuary for those who live
-            on two wheels. We serve bold flavors, hot coffee, and the best stories from the road. Whether you ride a
-            superbike or a scooter, you belong here.</p>
-        </div>
-
-        <div class="about-section">
-          <h3 class="section-title">OUR JOURNEY</h3>
-          <p>Started in 2024 with a single wok and a dream, we've grown into the city's favorite hangout spot. From
-            weekend breakfast rides to late-night chai runs, we've been part of thousands of kilometers of memories.</p>
-        </div>
-
-        <div class="about-section">
-          <h3 class="section-title">UPCOMING RIDES</h3>
-          <ul class="ride-list">
-            <li><strong>Sunday Morning Blast:</strong> Coming soon ! lets plan something exciting</li>
-            <li><strong>Night Owl Ride:</strong> Coming soon ! lets plan something exciting</li>
-            <li><strong>Summer Expedition:</strong> Sikkim Tour (May 27th)</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="signature-area">
-        <p class="signature">- Sudipa</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Holographic Menu Overlay -->
-  <div id="menuOverlay" class="menu-overlay">
-    <div class="menu-container">
-      <button id="closeMenu" class="close-btn">&times;</button>
-      <h2 class="menu-title">streetwok MENU</h2>
-
-      <div class="menu-grid">
-        <!-- Section: Combos -->
-        <div class="menu-section">
-          <h3 class="section-title">SIGNATURE COMBOS & BOXES</h3>
-          <ul class="menu-list">
-            <li><span>Saver Combo - Veg Burger (Aloo Tikki) + Reg Fries + Small Chai</span><span class="dots"></span><span class="price">₹129</span></li>
-            <li><span>Streetwok Signature Combo - Peri Peri Strips (4 pcs) + Loaded Fries</span><span class="dots"></span><span class="price">₹199</span></li>
-            <li><span>Chicken Craver Combo - Smash Chicken / Zinger Burger + Reg Fries + Small Chai</span><span class="dots"></span><span class="price">₹149</span></li>
-            <li><span>Momo Lover Combo - Steam Chicken MOMO + Reg Fries + Small Chai</span><span class="dots"></span><span class="price">₹129</span></li>
-            <li><span>Crunchy Chicken Box - Chicken Popcorn + Fried Wings(2pcs) + Reg Fries</span><span class="dots"></span><span class="price">₹149</span></li>
-            <li><span>Buddy Combo - Any 2 Burgers + Large Fries</span><span class="dots"></span><span class="price">₹249</span></li>
-            <li><span>Family Snack Box - Peri Peri Strips (6 pcs) + Chicken Popcorn + Fried Wings (4 pcs) + Large Fries</span><span class="dots"></span><span class="price">₹399</span></li>
-            <li><span>Veggie Snack Box - Mozeralla Cheese Sticks + Potato nuggets + Reg Fries</span><span class="dots"></span><span class="price">₹149</span></li>
-          </ul>
-        </div>
-
-        <!-- Section: Burgers -->
-        <div class="menu-section">
-          <h3 class="section-title">BURGER</h3>
-          <ul class="menu-list">
-            <li><span>Aloo Tikki Burger</span><span class="dots"></span><span class="price">₹59</span></li>
-            <li><span>Smash Chicken Burger</span><span class="dots"></span><span class="price">₹79</span></li>
-            <li><span>Momo Burger</span><span class="dots"></span><span class="price">₹79</span></li>
-            <li><span>Zinger Burger</span><span class="dots"></span><span class="price">₹79</span></li>
-          </ul>
-          <div style="font-size: 0.9rem; color: var(--primary); text-align: right; margin-top: -2rem; margin-bottom: 3rem;">* ADD Fries @39</div>
-        </div>
-
-        <!-- Section: Fries -->
-        <div class="menu-section">
-          <h3 class="section-title">FRIES</h3>
-          <ul class="menu-list">
-            <li><span>Regular Fries / Fries Large</span><span class="dots"></span><span class="price">₹49 / ₹79</span></li>
-            <li><span>Peri Peri Small / Peri Peri Large</span><span class="dots"></span><span class="price">₹79 / ₹89</span></li>
-            <li><span>Loaded Fries</span><span class="dots"></span><span class="price">₹109</span></li>
-          </ul>
-        </div>
-
-        <!-- Section: Bites -->
-        <div class="menu-section">
-          <h3 class="section-title">BITES & SIDES</h3>
-          <ul class="menu-list">
-            <li><span>Peri Peri Strips (4pcs / 6pcs)</span><span class="dots"></span><span class="price">₹99 / ₹149</span></li>
-            <li><span>Chicken Popcorn / Saucy Popcorn</span><span class="dots"></span><span class="price">₹59 / ₹79</span></li>
-            <li><span>Maxi Chicken / Maxi Saucy Popcorn</span><span class="dots"></span><span class="price">₹99 / ₹119</span></li>
-            <li><span>Mozeralla Sticks (5 pcs / 10 pcs)</span><span class="dots"></span><span class="price">₹59 / ₹109</span></li>
-            <li><span>Fried Wings (4 pcs / 8 pcs)</span><span class="dots"></span><span class="price">₹149 / ₹249</span></li>
-            <li><span>Spring Roll (3 pcs / 6 pcs)</span><span class="dots"></span><span class="price">₹59 / ₹109</span></li>
-            <li><span>Potato Nuggets (Small / Large)</span><span class="dots"></span><span class="price">₹59 / ₹109</span></li>
-          </ul>
-          <div style="font-size: 0.9rem; color: var(--primary); text-align: right; margin-top: -2rem; margin-bottom: 3rem;">* ADD Fries @39</div>
-        </div>
-
-        <!-- Section: Momos -->
-        <div class="menu-section">
-          <h3 class="section-title">MOMO</h3>
-          <ul class="menu-list">
-            <li><span>Pan Fried Momo (5pcs)</span><span class="dots"></span><span class="price">₹99</span></li>
-            <li><span>Steam Chicken MOMO</span><span class="dots"></span><span class="price">₹69</span></li>
-            <li><span>Fried Chicken MOMO</span><span class="dots"></span><span class="price">₹79</span></li>
-            <li><span>Steam Veg MOMO</span><span class="dots"></span><span class="price">₹49</span></li>
-            <li><span>Fried Veg MOMO</span><span class="dots"></span><span class="price">₹59</span></li>
-          </ul>
-          <div style="font-size: 0.9rem; color: var(--primary); text-align: right; margin-top: -2rem; margin-bottom: 3rem;">* ADD Fries @39</div>
-        </div>
-
-        <!-- Section: Beverages -->
-        <div class="menu-section">
-          <h3 class="section-title">BEVERAGES</h3>
-          <ul class="menu-list">
-            <li><span>Chai (Small / Large)</span><span class="dots"></span><span class="price">₹10 / ₹20</span></li>
-            <li><span>Hot Coffee (S / L)</span><span class="dots"></span><span class="price">₹30 / ₹60</span></li>
-            <li><span>Black Coffee (S / L)</span><span class="dots"></span><span class="price">₹25 / ₹50</span></li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="menu-footer">
-        <p>STREETWOK BIKERS CAFE • MUKUNDAPUR • +91 6290591422</p>
-      </div>
-    </div>
-  </div>
-
-  <footer class="footer">
-    <small>STREETWOK MOTO-CAFE // EST. 2024 // RIDE HARD • EAT WELL</small>
-  </footer>
-  </div>
-
-  <!-- Bottom Cart Panel -->
-  <div id="cartPanel" class="cart-panel">
-    <!-- Collapsed Header -->
-    <div class="cart-header" id="cartHeader">
-      <div class="cart-summary">
-        <span id="cartCount">0 ITEMS</span>
-        <span class="divider">|</span>
-        <span id="cartTotal">₹0</span>
-      </div>
-      <button class="view-cart-btn" id="toggleCartBtn">VIEW CART &uarr;</button>
-    </div>
-
-    <!-- Expanded Content -->
-    <div class="cart-content">
-      <h3 class="cart-title">Your Order</h3>
-      <ul id="cartItemsList" class="cart-items-list">
-        <!-- Items added dynamically -->
-      </ul>
-      <div class="cart-footer-bill">
-        <div class="bill-row total">
-          <span>Grand Total</span>
-          <span id="cartFinalTotal">₹0</span>
-        </div>
-        <button class="checkout-btn">PROCEED TO PAY</button>
-      </div>
-    </div>
-  </div>
+  </aside>
 
   <script src="app.js"></script>
 </body>

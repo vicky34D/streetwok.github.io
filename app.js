@@ -1,339 +1,221 @@
-// app.js - StreetWok Himalayan Snow Ride
-(function () {
-  const container = document.getElementById('canvas-container');
+const phoneNumber = "916290591422";
 
-  let scene, camera, renderer;
-  let terrain;
-  let snowParticles;
+const images = {
+  alooTikkiBurger: "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=900&q=85",
+  smashChickenBurger: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=900&q=85",
+  momoBurger: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?auto=format&fit=crop&w=900&q=85",
+  zingerBurger: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=85",
+  fries: "https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=900&q=85",
+  periFries: "https://images.unsplash.com/photo-1639024471283-03518883512d?auto=format&fit=crop&w=900&q=85",
+  loadedFries: "https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?auto=format&fit=crop&w=900&q=85",
+  periStrips: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=900&q=85",
+  chai: "https://images.unsplash.com/photo-1571934811356-5cc061b6821f?auto=format&fit=crop&w=900&q=85",
+  coffee: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=85",
+  popcorn: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=85",
+  saucyPopcorn: "https://images.unsplash.com/photo-1527477396000-e27163b481c2?auto=format&fit=crop&w=900&q=85",
+  mozzarella: "https://images.unsplash.com/photo-1548340748-6d2b7d7da280?auto=format&fit=crop&w=900&q=85",
+  wings: "https://images.unsplash.com/photo-1567620832903-9fc6debc209f?auto=format&fit=crop&w=900&q=85",
+  panFriedMomo: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?auto=format&fit=crop&w=900&q=85",
+  springRoll: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=900&q=85",
+  potatoNuggets: "https://images.unsplash.com/photo-1562967914-608f82629710?auto=format&fit=crop&w=900&q=85",
+  steamChickenMomo: "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=900&q=85",
+  friedChickenMomo: "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=900&q=85",
+  steamVegMomo: "https://images.unsplash.com/photo-1541696432-82c6da8ce7bf?auto=format&fit=crop&w=900&q=85",
+  friedVegMomo: "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=900&q=85",
+  saverCombo: "https://images.unsplash.com/photo-1625938144755-652e08e359b7?auto=format&fit=crop&w=900&q=85",
+  chickenCraverCombo: "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?auto=format&fit=crop&w=900&q=85",
+  buddyCombo: "https://images.unsplash.com/photo-1610970878459-a0e464d7592b?auto=format&fit=crop&w=900&q=85",
+  familySnackBox: "https://images.unsplash.com/photo-1606755962773-d324e0a13086?auto=format&fit=crop&w=900&q=85",
+  signatureCombo: "https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=900&q=85",
+  momoLoverCombo: "https://images.unsplash.com/photo-1625220194771-7ebdea0b70b9?auto=format&fit=crop&w=900&q=85",
+  crunchyChickenBox: "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?auto=format&fit=crop&w=900&q=85",
+  veggieSnackBox: "https://images.unsplash.com/photo-1548340748-6d2b7d7da280?auto=format&fit=crop&w=900&q=85"
+};
 
-  // Animation Globals
-  let time = 0;
-  let mouse = { x: 0, y: 0 };
-  let targetCamX = 0;
-  let targetCamY = 0;
+const combos = [
+  { name: "Streetwok Signature Combo", price: 199, desc: "Peri Peri Strips (4 pcs) + Loaded Fries", image: images.signatureCombo, featured: true },
+  { name: "Saver Combo", price: 129, desc: "Veg Burger (Aloo Tikki), Regular Fries, Small Chai", image: images.saverCombo },
+  { name: "Chicken Craver Combo", price: 159, desc: "Smash Chicken or Zinger Burger, Regular Fries, Small Chai", image: images.chickenCraverCombo },
+  { name: "Momo Lover Combo", price: 139, desc: "Steam Chicken Momo, Regular Fries, Small Chai", image: images.momoLoverCombo },
+  { name: "Crunchy Chicken Box", price: 149, desc: "Chicken Popcorn, Fried Wings (2 pcs), Regular Fries", image: images.crunchyChickenBox },
+  { name: "Buddy Combo", price: 249, desc: "Any 2 Burgers + Large Fries", image: images.buddyCombo },
+  { name: "Veggie Snack Box", price: 149, desc: "Mozzarella Cheese Sticks, Potato Nuggets, Regular Fries", image: images.veggieSnackBox },
+  { name: "Family Snack Box", price: 399, desc: "Peri Peri Strips (6 pcs), Chicken Popcorn, Fried Wings (4 pcs), Large Fries", image: images.familySnackBox }
+];
 
-  const width = window.innerWidth;
-  const height = window.innerHeight;
+const menu = [
+  { category: "Burgers", name: "Aloo Tikki Burger", price: 69, desc: "Classic veg patty with cafe sauce.", image: images.alooTikkiBurger, badge: "Add fries @39" },
+  { category: "Burgers", name: "Smash Chicken Burger", price: 89, desc: "Juicy chicken, crisp edges, big bite.", image: images.smashChickenBurger, badge: "Add fries @39" },
+  { category: "Burgers", name: "Momo Burger", price: 79, desc: "Streetwok-style momo stuffed burger.", image: images.momoBurger, badge: "Add fries @39" },
+  { category: "Burgers", name: "Zinger Burger", price: 79, desc: "Crispy fillet with spicy crunch.", image: images.zingerBurger, badge: "Add fries @39" },
 
-  function init3D() {
-    scene = new THREE.Scene();
+  { category: "Fries", name: "Regular Fries", price: 49, desc: "Hot salted fries.", image: images.fries },
+  { category: "Fries", name: "Fries Large", price: 79, desc: "Bigger shareable fries.", image: images.fries },
+  { category: "Fries", name: "Peri Peri Small", price: 79, desc: "Fries tossed in peri peri spice.", image: images.periFries },
+  { category: "Fries", name: "Peri Peri Large", price: 119, desc: "Large peri peri fries.", image: images.periFries },
+  { category: "Fries", name: "Loaded Fries", price: 149, desc: "Saucy loaded fries with bold toppings.", image: images.loadedFries },
 
-    // Bright Snow Fog
-    scene.fog = new THREE.FogExp2(0xddeeff, 0.002);
+  { category: "Chicken", name: "Peri Peri Strips (4 pcs)", price: 109, desc: "Crispy strips with peri peri heat.", image: images.periStrips, badge: "Add fries @39" },
+  { category: "Chicken", name: "Peri Peri Strips (6 pcs)", price: 149, desc: "More strips for the table.", image: images.periStrips, badge: "Add fries @39" },
+  { category: "Chicken", name: "Chicken Popcorn", price: 59, desc: "Crunchy bite-size chicken.", image: images.popcorn, badge: "Add fries @39" },
+  { category: "Chicken", name: "Saucy Popcorn", price: 79, desc: "Popcorn chicken in sauce.", image: images.saucyPopcorn, badge: "Add fries @39" },
+  { category: "Chicken", name: "Maxi Chicken Popcorn", price: 99, desc: "Bigger popcorn chicken portion.", image: images.popcorn, badge: "Add fries @39" },
+  { category: "Chicken", name: "Maxi Saucy Popcorn", price: 129, desc: "Bigger saucy popcorn chicken.", image: images.saucyPopcorn, badge: "Add fries @39" },
+  { category: "Chicken", name: "Fried Wings (4 pcs)", price: 149, desc: "Crispy fried wings.", image: images.wings, badge: "Add fries @39" },
+  { category: "Chicken", name: "Fried Wings (8 pcs)", price: 249, desc: "A fuller wings box.", image: images.wings, badge: "Add fries @39" },
 
-    camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000);
-    camera.position.set(0, 40, 100);
-    camera.lookAt(0, 10, -100);
+  { category: "Momo", name: "Pan Fried Momo (5 pcs)", price: 99, desc: "Pan tossed momos with masala finish.", image: images.panFriedMomo },
+  { category: "Momo", name: "Steam Chicken Momo", price: 69, desc: "Soft steamed chicken momos.", image: images.steamChickenMomo, badge: "Add fries @39" },
+  { category: "Momo", name: "Fried Chicken Momo", price: 79, desc: "Fried chicken momos.", image: images.friedChickenMomo, badge: "Add fries @39" },
+  { category: "Momo", name: "Steam Veg Momo", price: 59, desc: "Steamed vegetarian momos.", image: images.steamVegMomo, badge: "Add fries @39" },
+  { category: "Momo", name: "Fried Veg Momo", price: 69, desc: "Fried vegetarian momos.", image: images.friedVegMomo, badge: "Add fries @39" },
 
-    renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true; // Enable shadows for riders
-    container.appendChild(renderer.domElement);
+  { category: "Snacks", name: "Mozzarella Sticks (5 pcs)", price: 69, desc: "Melty cheese sticks.", image: images.mozzarella, badge: "Add fries @39" },
+  { category: "Snacks", name: "Mozzarella Sticks (10 pcs)", price: 129, desc: "Double cheese sticks.", image: images.mozzarella, badge: "Add fries @39" },
+  { category: "Snacks", name: "Spring Roll (3 pcs)", price: 69, desc: "Crisp rolls with dip.", image: images.springRoll, badge: "Add fries @39" },
+  { category: "Snacks", name: "Spring Roll (6 pcs)", price: 129, desc: "Shareable spring rolls.", image: images.springRoll, badge: "Add fries @39" },
+  { category: "Snacks", name: "Potato Nuggets Small", price: 59, desc: "Golden potato bites.", image: images.potatoNuggets, badge: "Add fries @39" },
+  { category: "Snacks", name: "Potato Nuggets Large", price: 109, desc: "Large potato nuggets.", image: images.potatoNuggets, badge: "Add fries @39" },
 
-    // --- LIGHTING ---
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-    scene.add(ambientLight);
+  { category: "Drinks", name: "Chai Small", price: 15, desc: "Small hot chai.", image: images.chai },
+  { category: "Drinks", name: "Chai Large", price: 25, desc: "Large hot chai.", image: images.chai },
+  { category: "Drinks", name: "Hot Coffee Small", price: 30, desc: "Small hot coffee.", image: images.coffee },
+  { category: "Drinks", name: "Hot Coffee Large", price: 60, desc: "Large hot coffee.", image: images.coffee },
+  { category: "Drinks", name: "Black Coffee Small", price: 25, desc: "Small black coffee.", image: images.coffee },
+  { category: "Drinks", name: "Black Coffee Large", price: 50, desc: "Large black coffee.", image: images.coffee }
+];
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    sunLight.position.set(100, 200, 100);
-    sunLight.castShadow = true;
-    sunLight.shadow.mapSize.width = 1024;
-    sunLight.shadow.mapSize.height = 1024;
-    scene.add(sunLight);
+const comboGrid = document.querySelector("#comboGrid");
+const menuGrid = document.querySelector("#menuGrid");
+const categoryTabs = document.querySelector("#categoryTabs");
+const bucket = document.querySelector("#bucket");
+const bucketToggle = document.querySelector("#bucketToggle");
+const bucketCount = document.querySelector("#bucketCount");
+const bucketTotal = document.querySelector("#bucketTotal");
+const bucketItems = document.querySelector("#bucketItems");
+const clearBucket = document.querySelector("#clearBucket");
+const whatsappOrder = document.querySelector("#whatsappOrder");
 
+let activeCategory = "All";
+let cart = [];
 
-    // --- SNOW TERRAIN ---
-    // High poly for smooth snow dunes
-    const geometry = new THREE.PlaneGeometry(800, 800, 80, 80);
-    const pos = geometry.attributes.position;
+function money(value) {
+  return `₹${value}`;
+}
 
-    for (let i = 0; i < pos.count; i++) {
-      const x = pos.getX(i);
-      const y = pos.getY(i);
+function renderCombos() {
+  comboGrid.innerHTML = combos.map((item) => cardTemplate(item, item.featured ? "combo-card featured" : "combo-card")).join("");
+}
 
-      let z = 0;
-      // Smooth rolling hills
-      z += Math.sin(x * 0.01) * 20;
-      z += Math.cos(y * 0.01) * 20;
-      z += Math.sin(x * 0.05 + y * 0.05) * 5;
+function renderTabs() {
+  const categories = ["All", ...new Set(menu.map((item) => item.category))];
+  categoryTabs.innerHTML = categories.map((category) => (
+    `<button class="${category === activeCategory ? "active" : ""}" type="button" data-category="${category}">${category}</button>`
+  )).join("");
+}
 
-      pos.setZ(i, z);
-    }
+function renderMenu() {
+  const filtered = activeCategory === "All" ? menu : menu.filter((item) => item.category === activeCategory);
+  menuGrid.innerHTML = filtered.map((item) => cardTemplate(item, "menu-card")).join("");
+}
 
-    geometry.computeVertexNormals();
-    geometry.rotateX(-Math.PI / 2);
-
-    const material = new THREE.MeshStandardMaterial({
-      color: 0xffffff, // Snow White
-      roughness: 0.8,
-      metalness: 0.1,
-      // Emissive slightly blue for snow shadow glow
-      emissive: 0xccddff,
-      emissiveIntensity: 0.2
-    });
-
-    terrain = new THREE.Mesh(geometry, material);
-    terrain.position.y = -30;
-    terrain.receiveShadow = true;
-    scene.add(terrain);
-
-
-    // --- FALLING SNOW ---
-    const snowGeo = new THREE.BufferGeometry();
-    const snowCount = 4000;
-    const snowPos = [];
-    for (let i = 0; i < snowCount; i++) {
-      snowPos.push(
-        (Math.random() - 0.5) * 600,
-        Math.random() * 400 - 100,
-        (Math.random() - 0.5) * 600
-      );
-    }
-    snowGeo.setAttribute('position', new THREE.Float32BufferAttribute(snowPos, 3));
-    const snowMat = new THREE.PointsMaterial({
-      color: 0xffffff,
-      size: 0.5,
-      transparent: true,
-      opacity: 0.8
-    });
-    snowParticles = new THREE.Points(snowGeo, snowMat);
-    scene.add(snowParticles);
-  }
-
-  function animate() {
-    requestAnimationFrame(animate);
-    time += 0.01;
-
-    // --- MOVEMENT ---
-    // Terrain moves backward (z increases)
-    terrain.position.z += 0.5;
-    if (terrain.position.z > 200) terrain.position.z = 0;
-
-    // Snow falling
-    const sn = snowParticles.geometry.attributes.position.array;
-    for (let i = 1; i < sn.length; i += 3) {
-      sn[i] -= 0.5; // Fall down
-      if (sn[i] < -50) sn[i] = 200; // Reset to top
-    }
-    snowParticles.geometry.attributes.position.needsUpdate = true;
-    // Wind effect
-    snowParticles.position.x = Math.sin(time * 0.5) * 10;
-
-
-    // --- CAMERA ---
-    targetCamX = (mouse.x - width / 2) * 0.02;
-    targetCamY = (mouse.y - height / 2) * 0.02;
-
-    // Camera follows slightly but stays focused on journey
-    camera.position.x += (targetCamX - camera.position.x) * 0.02;
-    camera.position.y += (targetCamY + 40 - camera.position.y) * 0.02;
-    camera.lookAt(0, 0, -100);
-
-    renderer.render(scene, camera);
-  }
-
-  function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
-
-  function onMouseMove(event) {
-    mouse.x = event.clientX;
-    mouse.y = event.clientY;
-  }
-
-  if (container) {
-    window.addEventListener('resize', onWindowResize);
-    document.addEventListener('mousemove', onMouseMove);
-    init3D();
-    animate();
-  }
-
-  // --- CART LOGIC ---
-  const cartPanel = document.getElementById('cartPanel');
-  const cartHeader = document.getElementById('cartHeader');
-  const cartCountEl = document.getElementById('cartCount');
-  const cartTotalEl = document.getElementById('cartTotal');
-  const cartFinalTotalEl = document.getElementById('cartFinalTotal');
-  const cartItemsList = document.getElementById('cartItemsList');
-  const toggleCartBtn = document.getElementById('toggleCartBtn');
-
-  // State
-  let cart = []; // Array of objects: { name, prices: [], selectedSizeIndex, quantity, element }
-
-  function updateCartUI() {
-    // 1. Update Summary
-    const total = cart.reduce((sum, item) => sum + (item.prices[item.selectedSizeIndex] * item.quantity), 0);
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-
-    cartCountEl.innerText = `${count} ITEMS`;
-    cartTotalEl.innerText = `₹${total}`;
-    cartFinalTotalEl.innerText = `₹${total}`;
-
-    // 2. Visibility
-    if (count > 0) {
-      cartPanel.classList.add('visible');
-    } else {
-      cartPanel.classList.remove('visible');
-      cartPanel.classList.remove('expanded'); // Auto collapse if empty
-      toggleCartBtn.innerHTML = 'VIEW CART &uarr;';
-    }
-
-    // 3. Render Items
-    cartItemsList.innerHTML = '';
-    cart.forEach((item, index) => {
-      const currentPrice = item.prices[item.selectedSizeIndex];
-      const hasSizeOptions = item.prices.length > 1;
-
-      const li = document.createElement('li');
-      li.className = 'cart-item';
-
-      let sizeHtml = '';
-      if (hasSizeOptions) {
-        sizeHtml = `
-          <div class="size-controls">
-            <button class="size-btn ${item.selectedSizeIndex === 0 ? 'active' : ''}" data-index="${index}" data-size="0">S</button>
-            <button class="size-btn ${item.selectedSizeIndex === 1 ? 'active' : ''}" data-index="${index}" data-size="1">L</button>
-          </div>
-        `;
-      }
-
-      li.innerHTML = `
-        <span class="item-name">${item.name}</span>
-        ${sizeHtml}
-        <span class="item-price">₹${currentPrice * item.quantity}</span>
-        <div class="qty-controls">
-            <button class="qty-btn minus" data-index="${index}">-</button>
-            <span class="qty-val">${item.quantity}</span>
-            <button class="qty-btn plus" data-index="${index}">+</button>
+function cardTemplate(item, className) {
+  return `
+    <article class="${className}">
+      ${item.badge ? `<span class="badge">${item.badge}</span>` : ""}
+      <img src="${item.image}" alt="${item.name}" loading="lazy">
+      <div class="${className.includes("combo") ? "combo-body" : "menu-body"}">
+        <h3>${item.name}</h3>
+        <p>${item.desc}</p>
+        <div class="price-row">
+          <span class="price">${money(item.price)}</span>
+          <button class="add-btn" type="button" data-name="${item.name}" data-price="${item.price}">Add</button>
         </div>
-      `;
-      cartItemsList.appendChild(li);
-    });
+      </div>
+    </article>
+  `;
+}
 
-    // 4. Attach Listeners
-    // Quantity
-    cartItemsList.querySelectorAll('.minus').forEach(btn => {
-      btn.addEventListener('click', (e) => updateQuantity(parseInt(e.target.dataset.index), -1));
-    });
-    cartItemsList.querySelectorAll('.plus').forEach(btn => {
-      btn.addEventListener('click', (e) => updateQuantity(parseInt(e.target.dataset.index), 1));
-    });
-    // Size
-    cartItemsList.querySelectorAll('.size-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const idx = parseInt(e.target.dataset.index);
-        const sizeIdx = parseInt(e.target.dataset.size);
-        updateSize(idx, sizeIdx);
-      });
-    });
+function addToCart(name, price) {
+  const existing = cart.find((item) => item.name === name);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ name, price, quantity: 1 });
+  }
+  renderCart();
+}
+
+function updateQuantity(name, change) {
+  const item = cart.find((entry) => entry.name === name);
+  if (!item) return;
+  item.quantity += change;
+  if (item.quantity <= 0) {
+    cart = cart.filter((entry) => entry.name !== name);
+  }
+  renderCart();
+}
+
+function renderCart() {
+  const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  bucketCount.textContent = count;
+  bucketTotal.textContent = money(total);
+  bucket.classList.toggle("has-items", count > 0);
+
+  bucketItems.innerHTML = cart.length
+    ? cart.map((item) => `
+      <li class="bucket-item">
+        <div>
+          <strong>${item.name}</strong>
+          <span>${money(item.price)} each</span>
+        </div>
+        <div class="qty">
+          <button type="button" data-qty="-1" data-name="${item.name}" aria-label="Remove one ${item.name}">-</button>
+          <b>${item.quantity}</b>
+          <button type="button" data-qty="1" data-name="${item.name}" aria-label="Add one ${item.name}">+</button>
+        </div>
+      </li>
+    `).join("")
+    : `<li class="bucket-item"><strong>Your bucket is empty</strong><span>Add a few favourites from the menu.</span></li>`;
+
+  const lines = cart.map((item) => `${item.quantity} x ${item.name} - ${money(item.price * item.quantity)}`);
+  const message = encodeURIComponent(`Hi Streetwok, I want to order:\n${lines.join("\n")}\nTotal: ${money(total)}`);
+  whatsappOrder.href = cart.length ? `https://wa.me/${phoneNumber}?text=${message}` : `https://wa.me/${phoneNumber}`;
+}
+
+document.addEventListener("click", (event) => {
+  const addButton = event.target.closest(".add-btn");
+  if (addButton) {
+    addToCart(addButton.dataset.name, Number(addButton.dataset.price));
+    bucket.classList.add("open");
+    return;
   }
 
-  function addToCart(name, prices, element) {
-    const existingItem = cart.find(item => item.name === name);
-    if (existingItem) {
-      existingItem.quantity += 1;
-    } else {
-      cart.push({ name, prices, selectedSizeIndex: 0, quantity: 1, element });
-    }
-    updateCartUI();
+  const tab = event.target.closest("[data-category]");
+  if (tab) {
+    activeCategory = tab.dataset.category;
+    renderTabs();
+    renderMenu();
+    return;
   }
 
-  function updateQuantity(index, change) {
-    const item = cart[index];
-    item.quantity += change;
-
-    if (item.quantity <= 0) {
-      // Remove item
-      if (item.element) {
-        item.element.classList.remove('selected');
-      }
-      cart.splice(index, 1);
-    }
-    updateCartUI();
+  const qty = event.target.closest("[data-qty]");
+  if (qty) {
+    updateQuantity(qty.dataset.name, Number(qty.dataset.qty));
   }
+});
 
-  function updateSize(index, sizeIndex) {
-    cart[index].selectedSizeIndex = sizeIndex;
-    updateCartUI();
-  }
+bucketToggle.addEventListener("click", () => {
+  bucket.classList.toggle("open");
+});
 
-  // Toggle Cart Expansion
-  if (cartHeader) {
-    cartHeader.addEventListener('click', () => {
-      cartPanel.classList.toggle('expanded');
-      const isExpanded = cartPanel.classList.contains('expanded');
-      toggleCartBtn.innerHTML = isExpanded ? 'CLOSE &darr;' : 'VIEW CART &uarr;';
-    });
-  }
+clearBucket.addEventListener("click", () => {
+  cart = [];
+  renderCart();
+});
 
-  // Menu Item Selection Interaction
-  const menuItems = document.querySelectorAll('.menu-list li');
-  menuItems.forEach(item => {
-    item.addEventListener('click', () => {
-      // Toggle selected state visually checked by class
-      const isSelected = item.classList.contains('selected');
-
-      // Parse Info
-      const nameEl = item.querySelector('span:first-child');
-      const name = nameEl ? nameEl.innerText.split(' - ')[0] : 'Item'; // Simple name
-
-      const priceElement = item.querySelector('.price');
-      if (priceElement) {
-        const text = priceElement.innerText;
-        // Match ALL numbers (e.g. "49 / 79" -> ["49", "79"])
-        const match = text.match(/(\d+)/g);
-
-        if (match && match.length > 0) {
-          const prices = match.map(p => parseInt(p, 10));
-
-          if (!isSelected) {
-            // Select and Add
-            item.classList.add('selected');
-            addToCart(name, prices, item);
-          } else {
-            // Deselect and Remove (find first instance in cart)
-            item.classList.remove('selected');
-            const idx = cart.findIndex(c => c.element === item);
-            if (idx > -1) {
-              // We call splice directly here to avoid re-triggering class removal loop
-              cart.splice(idx, 1);
-              updateCartUI();
-            }
-          }
-        }
-      }
-    });
-  });
-
-  // Ride List Selection Interaction
-  const rideItems = document.querySelectorAll('.ride-list li');
-  rideItems.forEach(item => {
-    item.addEventListener('click', () => {
-      item.classList.toggle('selected');
-    });
-  });
-
-  // UI LOGIC (Preserved)
-  const menuBtn = document.getElementById('menuBtn');
-  const menuOverlay = document.getElementById('menuOverlay');
-  const closeMenu = document.getElementById('closeMenu');
-
-  const aboutBtn = document.getElementById('aboutBtn');
-  const aboutOverlay = document.getElementById('aboutOverlay');
-  const closeAbout = document.getElementById('closeAbout');
-
-  function openOverlay(overlay) { if (overlay) overlay.classList.add('active'); }
-  function closeOverlay(overlay) { if (overlay) overlay.classList.remove('active'); }
-
-  if (menuBtn) menuBtn.addEventListener('click', () => openOverlay(menuOverlay));
-  if (closeMenu) closeMenu.addEventListener('click', () => closeOverlay(menuOverlay));
-  if (aboutBtn) aboutBtn.addEventListener('click', () => openOverlay(aboutOverlay));
-  if (closeAbout) closeAbout.addEventListener('click', () => closeOverlay(aboutOverlay));
-  [menuOverlay, aboutOverlay].forEach(overlay => {
-    if (overlay) overlay.addEventListener('click', (e) => { if (e.target === overlay) closeOverlay(overlay); });
-  });
-
-})();
+renderCombos();
+renderTabs();
+renderMenu();
+renderCart();
