@@ -4,116 +4,195 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Streetwok - The Biker's Cafe Menu</title>
-  <meta name="description" content="Streetwok menu with burgers, fried chicken, momos, fries, chai, coffee, and combo boxes." />
+  <title>Streetwok - The Biker's Cafe | Menu</title>
+  <meta name="description" content="Streetwok - The Biker's Cafe. Burgers, fried chicken, momos, fries, chai, coffee and signature combos." />
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Streetwok - The Biker's Cafe" />
   <meta property="og:description" content="Bold burgers, fried chicken, momos, fries, chai, coffee, and combo boxes." />
   <meta property="og:image" content="bike_bg.png" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23d71920'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-size='28' font-weight='900' fill='white'%3ESW%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%23e4002b'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-family='Arial' font-size='26' font-weight='900' fill='white'%3ESW%3C/text%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-  <header class="site-header">
-    <a class="brand" href="#top" aria-label="Streetwok home">
-      <span class="brand-mark">SW</span>
-      <span>
-        <strong>Streetwok</strong>
-        <small>the biker's cafe</small>
-      </span>
-    </a>
-    <nav class="header-nav" aria-label="Main navigation">
-      <a href="#menu">Menu</a>
-      <a href="#combos">Combos</a>
-      <a href="#contact">Contact</a>
-    </nav>
-    <a class="order-link" href="tel:+916290591422">Call Now</a>
+
+  <!-- Top Header -->
+  <header class="top-header" id="topHeader">
+    <div class="header-inner">
+      <a class="logo" href="#top" aria-label="Streetwok home">
+        <span class="logo-icon">
+          <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="40" height="40" rx="8" fill="#e4002b"/>
+            <text x="20" y="28" text-anchor="middle" font-family="Arial" font-size="18" font-weight="900" fill="white">SW</text>
+          </svg>
+        </span>
+        <span class="logo-text">
+          <strong>STREETWOK</strong>
+          <small>THE BIKER'S CAFE</small>
+        </span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="#top" class="nav-link active">Home</a>
+        <a href="#menu" class="nav-link">Menu</a>
+        <a href="#combos" class="nav-link">Combos</a>
+        <a href="#contact" class="nav-link">Contact</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="phone-link" href="tel:+916290591422">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          <span>Call Now</span>
+        </a>
+        <button class="hamburger" id="hamburger" type="button" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
   </header>
 
+  <!-- Red Order Banner -->
+  <div class="order-banner">
+    <div class="banner-inner">
+      <span class="banner-text">ORDER BY PHONE OR WHATSAPP</span>
+      <a href="tel:+916290591422" class="banner-btn">+91 6290591422</a>
+    </div>
+  </div>
+
   <main id="top">
-    <section class="hero" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <p class="kicker">Fresh fried. Street hot. Ride ready.</p>
-        <h1 id="hero-title">Streetwok Bucket Menu</h1>
-        <p class="hero-text">Burgers, popcorn chicken, peri peri strips, momos, fries, chai, and boxes built for hungry riders.</p>
-        <div class="hero-actions">
-          <a class="primary-btn" href="#menu">View Menu</a>
-          <a class="ghost-btn" href="#combos">See Combos</a>
+
+    <!-- Hero Banner -->
+    <section class="hero-banner" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <div class="hero-left">
+          <span class="hero-badge">SIGNATURE DEAL</span>
+          <h1 id="hero-title">Peri Peri Strips<br>+ Loaded Fries</h1>
+          <p class="hero-desc">Crispy chicken strips with peri peri heat, paired with our loaded fries topped with cheese & sauces.</p>
+          <div class="hero-price-row">
+            <span class="hero-price">&#8377;199</span>
+            <a href="#combos" class="btn-primary">View All Combos</a>
+          </div>
+        </div>
+        <div class="hero-right">
+          <img src="https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=800&q=90" alt="Streetwok signature combo" class="hero-img" />
         </div>
       </div>
-      <div class="hero-board" aria-label="Featured Streetwok combo">
-        <div class="deal-ribbon">Signature Deal</div>
-        <img src="https://images.unsplash.com/photo-1562967916-eb82221dfb92?auto=format&fit=crop&w=1000&q=85" alt="Streetwok signature combo with fried chicken and loaded fries" />
-        <div class="hero-deal">
-          <span>Peri Peri Strips + Loaded Fries</span>
-          <strong>₹199</strong>
+    </section>
+
+    <!-- Quick Stats Strip -->
+    <section class="stats-strip" aria-label="Quick highlights">
+      <div class="stats-inner">
+        <div class="stat-item">
+          <strong>8</strong>
+          <span>Signature Combos</span>
+        </div>
+        <div class="stat-item">
+          <strong>&#8377;15</strong>
+          <span>Starting from</span>
+        </div>
+        <div class="stat-item">
+          <strong>+39</strong>
+          <span>Add Fries to any item</span>
+        </div>
+        <div class="stat-item">
+          <strong>35+</strong>
+          <span>Menu Items</span>
         </div>
       </div>
     </section>
 
-    <section class="quick-strip" aria-label="Streetwok highlights">
-      <div>
-        <strong>₹39</strong>
-        <span>Add fries on selected items</span>
-      </div>
-      <div>
-        <strong>₹129</strong>
-        <span>Saver combo starts</span>
-      </div>
-      <div>
-        <strong>6290591422</strong>
-        <span>Order by phone</span>
+    <!-- Menu Section -->
+    <section id="menu" class="menu-section">
+      <div class="menu-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-head">
+            <h2>STREETWOK MENU</h2>
+          </div>
+          <nav class="sidebar-nav" id="sidebarNav" aria-label="Menu categories">
+            <!-- JS populates -->
+          </nav>
+        </aside>
+
+        <!-- Menu Content -->
+        <div class="menu-content" id="menuContent">
+          <!-- JS populates -->
+        </div>
       </div>
     </section>
 
-    <section id="combos" class="section-wrap">
-      <div class="section-heading">
-        <p class="kicker">Combo boxes</p>
-        <h2>Streetwok Signature Combos</h2>
+    <!-- Combos Section -->
+    <section id="combos" class="combos-section">
+      <div class="combos-inner">
+        <div class="section-title">
+          <h2>SIGNATURE COMBOS</h2>
+          <p>Save big with our value meal deals</p>
+        </div>
+        <div class="combo-grid" id="comboGrid">
+          <!-- JS populates -->
+        </div>
       </div>
-      <div class="combo-grid" id="comboGrid"></div>
     </section>
 
-    <section id="menu" class="section-wrap menu-section">
-      <div class="section-heading">
-        <p class="kicker">Full menu</p>
-        <h2>Choose Your Cravings</h2>
+    <!-- Contact / Community -->
+    <section class="contact-section" id="contact">
+      <div class="contact-inner">
+        <div class="contact-info">
+          <span class="contact-kicker">VISIT US</span>
+          <h2>STREETWOK</h2>
+          <p>The Biker's Cafe</p>
+          <p class="contact-address">Mukundapur, Kolkata</p>
+          <a href="tel:+916290591422" class="contact-phone">+91 6290591422</a>
+          <div class="contact-social">
+            <span>Follow us</span>
+            <a href="https://instagram.com/streetwok9" target="_blank" rel="noreferrer">@STREETWOK9</a>
+          </div>
+        </div>
+        <div class="contact-cta">
+          <h3>ORDER NOW</h3>
+          <p>Call us or message on WhatsApp</p>
+          <a href="https://wa.me/916290591422" class="btn-whatsapp" target="_blank" rel="noreferrer">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            WhatsApp Order
+          </a>
+        </div>
       </div>
-      <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="Menu categories"></div>
-      <div class="menu-grid" id="menuGrid"></div>
     </section>
 
-    <section class="community" id="contact">
-      <div>
-        <p class="kicker">Join our community</p>
-        <h2>@streetwok9</h2>
-        <p>Streetwok - the biker's cafe. Bring the crew, grab a box, and make the next food stop loud.</p>
-      </div>
-      <div class="contact-card">
-        <span>Phone</span>
-        <a href="tel:+916290591422">6290591422</a>
-      </div>
-    </section>
   </main>
 
+  <!-- Floating Bucket -->
   <aside class="bucket" id="bucket" aria-label="Order bucket">
     <button class="bucket-toggle" id="bucketToggle" type="button">
-      <span><b id="bucketCount">0</b> items</span>
-      <strong id="bucketTotal">₹0</strong>
+      <span class="bucket-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <b id="bucketCount">0</b>
+      </span>
+      <strong id="bucketTotal">&#8377;0</strong>
     </button>
     <div class="bucket-panel">
       <div class="bucket-head">
-        <h2>Your Bucket</h2>
-        <button id="clearBucket" type="button">Clear</button>
+        <h3>Your Bucket</h3>
+        <button id="clearBucket" type="button">Clear All</button>
       </div>
       <ul id="bucketItems" class="bucket-items"></ul>
-      <a id="whatsappOrder" class="primary-btn checkout" href="#" target="_blank" rel="noreferrer">Order on WhatsApp</a>
+      <a id="whatsappOrder" class="btn-checkout" href="#" target="_blank" rel="noreferrer">Order on WhatsApp</a>
     </div>
   </aside>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>STREETWOK</strong>
+        <span>The Biker's Cafe &middot; Est. 2024</span>
+      </div>
+      <div class="footer-tagline">RIDE HARD &middot; EAT WELL</div>
+    </div>
+  </footer>
 
   <script src="app.js"></script>
 </body>
